@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class UserController {
 
-    private UserService userService;
+    private final UserService userService;
 
     //Get 요청으로 id에 해당하는 회원 엔티티 반환
     @GetMapping("/user/{id}")
@@ -27,15 +27,19 @@ public class UserController {
     }
 
     //Post 요청으로 폼에 입력받은 내용으로 회원정보 생성
-    @PostMapping("/user/create")
+    @PostMapping("/user")
     public ResponseEntity<UserEntitiy> create(@RequestBody UserDto dto){
 
+        log.info(dto.toString());
+
         UserEntitiy created = userService.create(dto);
+        log.info(created.toString());
 
         return created!=null?
                 ResponseEntity.status(HttpStatus.OK).body(created):
                 ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         //build는 내용 없이 반환하는것 . body(null)로 반환해도 무관함
+
     }
 
 
@@ -53,6 +57,7 @@ public class UserController {
     @DeleteMapping("/user/{id}")
     public ResponseEntity<UserEntitiy> delete(@PathVariable Long id){
         UserEntitiy deleted = userService.delete(id);
+        log.info(deleted.toString());
 
         return deleted!=null?
                 ResponseEntity.status(HttpStatus.OK).body(deleted):

@@ -29,5 +29,6 @@ public class UserDto {
     //dto를 entity로 변환하는 메소드
     public UserEntitiy toEntity() {
         return new UserEntitiy(id,name,userId,nickName,password,email,gender,phone,age,height,weight,exerciseType);
+        //return new UserEntitiy(id,name,userId,nickName,password,email,gender,phone,age,height,weight);
     }
 }

@@ -70,6 +70,7 @@ public class UserEntitiy {
 
     public void patch(UserEntitiy userEntitiy) {
         //객체 수정
+        this.name = userEntitiy.getName();
         this.nickName = userEntitiy.getNickName();
         this.weight = userEntitiy.getWeight();
         this.exerciseType = userEntitiy.getExerciseType();

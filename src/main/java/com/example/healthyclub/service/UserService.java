@@ -46,7 +46,7 @@ public class UserService {
         UserEntitiy target = userRepository.findById(id).orElse(null);
 
         //잘못된 요청 처리 (DB에서 url의 id에 해당하는 id를 못찾거나, url의 id와 수정을 위해 생성한 id가 다를경우)
-        if (target==null||id!=userEntitiy.getId()){
+        if (target==null||id!=target.getId()){
             return null; //null을 반환하면 컨트롤러에서 사용자에게 bad request 응답코드 반환
         }
 
@@ -67,13 +67,14 @@ public class UserService {
     public UserEntitiy delete(Long id){
         //대상 찾기
         UserEntitiy target = userRepository.findById(id).orElse(null);
+        log.info(target.toString());
 
         //잘못된 요청 처리
         if (target==null){
             return null; //null을 반환하면 컨트롤러에서 사용자에게 bad request 응답코드 반환
         }
 
-        //대상 삭제
+        //대상 삭제, 지워지는건 작동함 근데 반환코드가 잘못됨
         userRepository.delete(target);
 
         //데이터 반환
