@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @Slf4j
-@SpringBootApplication
 public class HealthyCheckController {
 
     //브랜치 테스트 입니다
@@ -16,4 +15,14 @@ public class HealthyCheckController {
         log.info("server is running");
         return "server is running";
     }
+
+    @GetMapping("/")
+    public String homepage(){
+
+
+
+
+        return "";
+    }
+
 }
