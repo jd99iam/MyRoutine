@@ -68,23 +68,13 @@ public class UserEntitiy {
     @ElementCollection
     private List<String> exerciseType;
 
-
-
-
-//    public UserEntitiy patch(UserEntitiy userEntitiy) {
-//        //예외처리
-//        if (userEntitiy.getId() == null||userEntitiy.getId()!=this.getId()){
-//            return null;
-//        }
-//
-//        //객체 수정
-//        this.nickName = userEntitiy.getNickName();
-//        this.weight = userEntitiy.getWeight();
-//        this.exerciseType = userEntitiy.getExerciseType();
-//        this.password = userEntitiy.getPassword();
-//        this.phone = userEntitiy.getPhone();
-//        this.height = userEntitiy.getHeight();
-//
-//        return this;
-//    }
+    public void patch(UserEntitiy userEntitiy) {
+        //객체 수정
+        this.nickName = userEntitiy.getNickName();
+        this.weight = userEntitiy.getWeight();
+        this.exerciseType = userEntitiy.getExerciseType();
+        this.password = userEntitiy.getPassword();
+        this.phone = userEntitiy.getPhone();
+        this.height = userEntitiy.getHeight();
+    }
 }
