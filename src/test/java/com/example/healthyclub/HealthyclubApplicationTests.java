@@ -8,6 +8,7 @@ class HealthyclubApplicationTests {
 
 	@Test
 	void contextLoads() {
+
 	}
 
 }
