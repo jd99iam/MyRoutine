@@ -1,9 +1,11 @@
 package com.example.healthyclub.entity;
 
+import com.example.healthyclub.controller.UserRequestDTO;
 import lombok.*;
 import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +15,7 @@ import java.util.List;
 @Entity
 @Table(name = "user")
 public class UserEntity {
-
+    //회원 개인 식별 번호
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -59,41 +61,29 @@ public class UserEntity {
     private int age;
 
     //운동 종목
-    @Column(name = "exercise_type")
+    @Column
     @Nullable
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "exercise_type")
     private List<String> exerciseType;
 
-    public UserEntity(String name, String userId, String password, String nickname, String email, int height, int weight,
-                      String gender, String phone, int age,List<String> exerciseType){
-        this.id = 0L;
-        this.name = name;
-        this.userId = userId;
-        this.password = password;
-        this.nickname = nickname;
-        this.email = email;
-        this.height = height;
-        this.weight = weight;
-        this.gender = gender;
-        this.phone = phone;
-        this.age = age;
-        this.exerciseType = exerciseType;
-    }
+    @Column(name = "join_date")
+   private LocalDate joinDate;
 
-//    public UserEntity patch(UserEntity userEntity) {
-//        //예외처리
-//        if (userEntity.getId() == null || this.getId() != userEntity.getId()){
-//            return null;
-//        }
-//
-//        //객체 수정
-//        this.nickname = userEntity.getNickname();
-//        this.weight = userEntity.getWeight();
-//        this.exerciseType = userEntity.getExerciseType();
-//        this.password = userEntity.getPassword();
-//        this.phone = userEntity.getPhone();
-//        this.height = userEntity.getHeight();
-//
-//        return this;
-//    }
+    @Column(name = "update_date")
+    private LocalDate updateDate;
+
+    public UserEntity(UserRequestDTO dto){
+        this.name = dto.getName();
+        this.userId = dto.getUserId();
+        this.password = dto.getUserId();
+        this.nickname = dto.getNickname();
+        this.email = dto.getEmail();
+        this.height = dto.getHeight();
+        this.weight = dto.getWeight();
+        this.gender = dto.getGender();
+        this.phone = dto.getPhone();
+        this.age = dto.getAge();
+        this.exerciseType = dto.getExerciseType();
+    }
 }
