@@ -1,12 +1,11 @@
 package com.example.healthyclub.entity;
 
-import com.example.healthyclub.controller.UserRequestDTO;
+import com.example.healthyclub.dto.UserRequestDTO;
 import lombok.*;
 import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @Setter @Getter @ToString
@@ -76,7 +75,7 @@ public class UserEntity {
     public UserEntity(UserRequestDTO dto){
         this.name = dto.getName();
         this.userId = dto.getUserId();
-        this.password = dto.getUserId();
+        this.password = dto.getPassword();
         this.nickname = dto.getNickname();
         this.email = dto.getEmail();
         this.height = dto.getHeight();

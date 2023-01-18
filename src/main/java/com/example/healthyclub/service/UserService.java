@@ -43,6 +43,8 @@ public class UserService {
             log.info("userEntity update is error!");
             throw new RuntimeException("UserEntity(Service) update Error");
         }
+        String rawPw = userEntity.getPassword();
+        userEntity.setPassword(encoder.encode(rawPw));
         return repository.save(userEntity);
     }
 
@@ -62,6 +64,26 @@ public class UserService {
         return target;
     }
 
+    //loginId 통해서 userEntity 찾아내기
+    @Transactional
+    public UserEntity getUser(String loginId){
+        return repository.getUserByUserId(loginId);
+    }
+
+    //로그인할 때 검증하기
+    @Transactional
+    public UserEntity validateLogin(final String loginId, final String password){
+        //회원가입을 했는가?
+        UserEntity user = getUser(loginId);
+        log.info("user - {}",user);
+        if (user == null) throw new RuntimeException("가입된 회원이 아닙니다.");
+
+        //패스워드가 일치하는가?
+        if (!encoder.matches(password, user.getPassword())){
+            throw new RuntimeException("비밀번호가 틀립니다.");
+        }
+        return user; //로그인 성공시 그 회원의 정보를 보여준다.
+    }
 
 
 

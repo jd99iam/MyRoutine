@@ -1,12 +1,16 @@
 package com.example.healthyclub.controller;
 
+import com.example.healthyclub.dto.UserRequestDTO;
+import com.example.healthyclub.dto.UserResponseDTO;
 import com.example.healthyclub.entity.UserEntity;
 import com.example.healthyclub.error.ErrorDTO;
+import com.example.healthyclub.jwt.TokenProvider;
 import com.example.healthyclub.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
@@ -20,7 +24,7 @@ import java.time.LocalDate;
 public class Usercontroller {
 
     private final UserService service;
-
+    private final TokenProvider provider;
 
     //회원가입하기
     @PostMapping("/join")
@@ -54,7 +58,13 @@ public class Usercontroller {
 
     //Userequestdto를 입력하면 정보를 바꿔주기
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id,@RequestBody UserRequestDTO dto){
+    public ResponseEntity<?> update(@PathVariable Long id,@RequestBody UserRequestDTO dto,@AuthenticationPrincipal String userId){
+
+        if(!userId.equals(service.show(id).getUserId())){
+            String m = "접근 권한이 없습니다.";
+            return ResponseEntity.badRequest().body(new ErrorDTO(m));
+        }
+
 
         try {
             log.info("/auth/update- {}",dto);
@@ -71,7 +81,7 @@ public class Usercontroller {
             userEntity.setUpdateDate(date);
             userEntity.setId(id);
             UserEntity user = service.update(userEntity);
-
+            log.info("@AuthenticationPrincipal String userId : {}",userId);
             return ResponseEntity.ok().body(user);
 
         }catch(RuntimeException e){
@@ -81,16 +91,41 @@ public class Usercontroller {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity delete(@PathVariable Long id){
+    public ResponseEntity delete(@PathVariable Long id, @AuthenticationPrincipal String userId){
+
+
+        if(!userId.equals(service.show(id).getUserId())){
+            String m = "접근 권한이 없습니다.";
+            return ResponseEntity.badRequest().body(new ErrorDTO(m));
+        }
+
         try {
             UserEntity delete = service.delete(id);
+            log.info("@AuthenticationPrincipal String userId : {}",userId);
             return ResponseEntity.ok().body(delete);
         }catch(Exception e){
             String message = "delete가 잘되지 않았습니다.";
             return ResponseEntity.badRequest().body(new ErrorDTO(message));
 
         }
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody UserRequestDTO dto){
+        log.info("/auth/login POST - login info : {}",dto);
+        try{
+            UserEntity user = service.validateLogin(dto.getUserId(), dto.getPassword());
+            //토큰 발행하기
+            final String token = provider.create(user);
+            UserResponseDTO userResponseDTO = new UserResponseDTO(user);
+            userResponseDTO.setToken(token);
+
+            return ResponseEntity.ok().body(userResponseDTO);
+        }catch(RuntimeException e){
+            return ResponseEntity.badRequest().body(new ErrorDTO(e.getMessage()));
         }
+    }
+
 
 
 }
