@@ -10,6 +10,8 @@ import java.time.LocalDate;
 
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
+    @Query(value = "select * from User where user_id = :user_id", nativeQuery = true)
+    UserEntity getUserByUserId(String user_id);
 
 
 }

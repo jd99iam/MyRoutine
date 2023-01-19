@@ -1,8 +1,7 @@
-package com.example.healthyclub.controller;
+package com.example.healthyclub.dto;
 
 import lombok.*;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Getter @Setter @ToString

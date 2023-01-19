@@ -6,9 +6,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.transaction.Transactional;
 import java.sql.Array;
+import java.sql.SQLOutput;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -21,6 +23,8 @@ class UserServiceTest {
     @Autowired
     UserService service;
 
+    @Autowired
+    PasswordEncoder encoder;
     @Test
     @DisplayName("회원가입이 정상적으로 이루어지는가")
     public void create(){
@@ -97,6 +101,19 @@ class UserServiceTest {
 
     }
 
+    @Test
+    @DisplayName("비밀번호 디코딩 전후가 같은가")
+    void aboutpassword(){
+        //given
+        UserEntity user = service.getUser("six");
+
+        System.out.println(user);
+
+        String pw = user.getPassword();
+
+        boolean matches = encoder.matches("12345", pw);
+        System.out.println(matches);
+    }
 
 
 }
