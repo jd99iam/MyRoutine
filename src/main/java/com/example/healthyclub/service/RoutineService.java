@@ -6,6 +6,7 @@ import com.example.healthyclub.entity.UserEntity;
 import com.example.healthyclub.repository.RoutineRepository;
 import com.example.healthyclub.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -14,6 +15,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class RoutineService {
 
     private final RoutineRepository routineRepository;
@@ -21,7 +23,14 @@ public class RoutineService {
 
     //Create
     @Transactional
-    public RoutineDTO create(RoutineDTO routineDTO,Long userId){
+    public RoutineDTO create(RoutineDTO routineDTO,Long userId,Long tokenId){
+
+        log.info("userId : "+userId+" tokenId : "+tokenId);
+
+        if (userId!=tokenId){
+            throw new IllegalArgumentException("로그인한 유저와 생성하려는 유저의 id(PK) 불일치. 생성 할 수 없음!");
+        }
+
 
         //유저리포지토리를 이용해서 유저 엔티티 생성 (이 유저의 루틴을 만들것임)
         UserEntity targetUser = userRepository.findById(userId)
@@ -69,7 +78,12 @@ public class RoutineService {
 
     //수정 폼에 입력받은 dto, 유저 id, 루틴 id 받아서 수정해주고 dto 형태로 반환
     @Transactional
-    public RoutineDTO update(RoutineDTO routineDTO, Long userId, Long routineId) {
+    public RoutineDTO update(RoutineDTO routineDTO, Long userId, Long routineId, Long tokenId) {
+
+        //인증
+        if (userId!=tokenId){
+            throw new IllegalArgumentException("나의 루틴만 수정할 수 있습니다");
+        }
 
         //수정할 루틴 DB에서 찾기
         RoutineEntity target = routineRepository.findById(routineId)
@@ -88,7 +102,13 @@ public class RoutineService {
     }
 
     //루틴 삭제
-    public RoutineDTO delete(Long userId, Long routineId) {
+    public RoutineDTO delete(Long userId, Long routineId, Long tokenId) {
+
+        //인증
+        if (userId!=tokenId){
+            throw new IllegalArgumentException("나의 루틴만 삭제할 수 있습니다");
+        }
+
         //삭제할 루틴 DB에서 찾기
         RoutineEntity target = routineRepository.findById(routineId)
                 .orElseThrow(()->new IllegalArgumentException("RoutineService-delete : 루틴을 찾을 수 없습니다"));
