@@ -80,7 +80,7 @@ public class RoutineController {
     // 1. 수정 없이 복사 : 아래 메소드 : routineId에 해당하는 루틴을 로그인한 사용자의 루틴으로 똑같이 복사
     // 2. 수정 하면서 복사 : 프론트에서 해당 루틴 수정 폼을 띄우고(show이용) 수정 폼에 입력한 후
     // 복사하기 누르면 create 이용해서 새로운 루틴을 만들어주는거랑 같음
-    @PostMapping("/routine/copy/{routineId}")
+    @GetMapping("/routine/copy/{routineId}")
     public ResponseEntity<RoutineDTO> copy(@PathVariable Long routineId, @AuthenticationPrincipal String tokenId){
 
         //서비스에게 위임해서 복사 : PK가 targetId인 유저의 PK가 routineId인 루틴을 PK가 tokenId인 유저의 루틴으로 생성
