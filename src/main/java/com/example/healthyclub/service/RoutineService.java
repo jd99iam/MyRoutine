@@ -123,5 +123,24 @@ public class RoutineService {
         
         return RoutineDTO.toDTO(target);
     }
+
+
+    public RoutineDTO copy(Long routineId, Long tokenId) {
+
+        //복사하려는 루틴 엔티티
+        RoutineEntity target = routineRepository.findById(routineId)
+                .orElseThrow(()->new IllegalArgumentException("존재하지 않는 루틴입니다. 복사할 수 없습니다"));
+
+        //지금 로그인한 유저 엔티티
+        UserEntity targetUser = userRepository.findById(tokenId)
+                .orElseThrow(()->new IllegalArgumentException("존재하지 않는 유저입니다. 루틴을 복사할 수 없습니다"));
+
+        RoutineEntity copied = RoutineEntity.toEntity(
+                new RoutineDTO(null,targetUser.getId(),target.getDate(),target.getRoutine()),
+                targetUser);
+
+        return RoutineDTO.toDTO(routineRepository.save(copied));
+
+    }
 }
 
