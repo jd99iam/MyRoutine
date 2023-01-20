@@ -1,14 +1,16 @@
 package com.example.healthyclub.controller;
 
-import com.example.healthyclub.entity.FriendEntity;
 import com.example.healthyclub.entity.UserEntity;
 import com.example.healthyclub.error.ErrorDTO;
-import com.example.healthyclub.service.FriendService;
+import com.example.healthyclub.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @RestController
@@ -18,49 +20,56 @@ import java.util.List;
 @CrossOrigin
 public class FriendController {
 
-    private final FriendService service;
+    private final UserRepository userRepository;
 
-    //해당하는 id의 모든 친구들을 불러오기
-    @GetMapping("/{userId}")
-    public ResponseEntity<?> showAll(@PathVariable Long userId){
-        List<FriendEntity> friendEntities = service.showAllFriends(userId);
 
-        return ResponseEntity.ok().body(friendEntities);
-    }
-
-    //userId인 녀석이 친구추가를 걸기
-    @PostMapping("/{userId}")
-    public ResponseEntity<?> addFriend(@PathVariable Long userId, @RequestBody FriendEntity entity){
-        try {
-            UserEntity user = new UserEntity();
-            user.setId(userId);
-            entity.setUser(user);
-            FriendEntity entity1 = service.addFriend(entity);
-
-            return ResponseEntity.ok().body(entity1);
-        }catch(RuntimeException e){
-            return ResponseEntity.badRequest().body(new ErrorDTO(e.getMessage()));
+    //친구를 추가하기 @Pathvariable의 id는 내가 친구를 추가하려는 사람의 id, @Auth의 identifyId는 나 자신
+    @PostMapping("/{id}")
+    @Transactional
+    public ResponseEntity<?> addFriends(@PathVariable Long id, @AuthenticationPrincipal String identifyId) {
+        long longId = Long.parseLong(identifyId);
+        List<String> friends = userRepository.getUserById(longId).getFriends();
+        String stringId = String.valueOf(id);
+        UserEntity userById = userRepository.getUserById(id);
+        log.info("{}",userById);
+        if(userById == null){
+            String message = "추가하려는 친구가 존재하지 않습니다.";
+            return ResponseEntity.badRequest().body(new ErrorDTO(message));
         }
+        friends.add(stringId);
+
+        return ResponseEntity.ok().body(friends);
     }
 
-    @DeleteMapping("/{userId}")
-    public ResponseEntity<?> deleteFriend(@PathVariable Long userId,@RequestBody UserEntity userEntity){
-
-
-        try{
-            FriendEntity entity = service.deleteFriends(userEntity, userId);
-            return ResponseEntity.ok().body(entity);
-
-        }catch(RuntimeException e){
-            return ResponseEntity.badRequest().body(new ErrorDTO(e.getMessage()));
+    //친구를 삭제하기
+    @DeleteMapping("/{id}")
+    @Transactional
+    public ResponseEntity<?> deleteFriends(@PathVariable Long id, @AuthenticationPrincipal String identifyId) {
+        long longId = Long.parseLong(identifyId);
+        List<String> friends = userRepository.getUserById(longId).getFriends();
+        String stringId = String.valueOf(id);
+        UserEntity userById = userRepository.getUserById(id);
+        log.info("{}",userById);
+        if(userById == null){
+            String message = "추가하려는 친구가 존재하지 않습니다.";
+            return ResponseEntity.badRequest().body(new ErrorDTO(message));
         }
+        friends.remove(stringId);
+
+        return ResponseEntity.ok().body(friends);
+
     }
 
+    //나의 모든 친구 목록들을 보여주기
+    @GetMapping("/show")
+    @Transactional
+    public ResponseEntity<?> deleteFriends(@AuthenticationPrincipal String identifyId) {
+        long longId = Long.parseLong(identifyId);
+        List<String> friends = userRepository.getUserById(longId).getFriends();
 
+        return ResponseEntity.ok().body(friends);
 
-
-
-
+    }
 
 
 }

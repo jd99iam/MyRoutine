@@ -62,9 +62,15 @@ public class UserEntity {
     //운동 종목
     @Column
     @Nullable
-    @ElementCollection(fetch = FetchType.EAGER)
+    @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "exercise_type")
     private List<String> exerciseType;
+
+    @Column
+    @Nullable
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(name = "friend_table")
+    private List<String> friends;
 
     @Column(name = "join_date")
    private LocalDate joinDate;
