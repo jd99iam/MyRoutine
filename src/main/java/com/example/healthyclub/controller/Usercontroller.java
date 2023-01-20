@@ -58,9 +58,15 @@ public class Usercontroller {
 
     //Userequestdto를 입력하면 정보를 바꿔주기
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id,@RequestBody UserRequestDTO dto,@AuthenticationPrincipal String userId){
+    public ResponseEntity<?> update(@PathVariable Long id,@RequestBody UserRequestDTO dto,@AuthenticationPrincipal String Id){
 
-        if(!userId.equals(service.show(id).getUserId())){
+        if(Id.equals("anonymousUser")){
+            String m = "접근 권한이 없습니다.";
+            return ResponseEntity.badRequest().body(new ErrorDTO(m));
+        }
+
+        Long userId = Long.parseLong(Id);
+        if(!userId.equals(service.show(id).getId())){
             String m = "접근 권한이 없습니다.";
             return ResponseEntity.badRequest().body(new ErrorDTO(m));
         }
@@ -91,10 +97,15 @@ public class Usercontroller {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity delete(@PathVariable Long id, @AuthenticationPrincipal String userId){
+    public ResponseEntity delete(@PathVariable Long id, @AuthenticationPrincipal String Id){
 
+        if(Id.equals("anonymousUser")){
+            String m = "접근 권한이 없습니다.";
+            return ResponseEntity.badRequest().body(new ErrorDTO(m));
+        }
 
-        if(!userId.equals(service.show(id).getUserId())){
+        Long userId = Long.parseLong(Id);
+        if(!userId.equals(service.show(id).getId())){
             String m = "접근 권한이 없습니다.";
             return ResponseEntity.badRequest().body(new ErrorDTO(m));
         }
@@ -109,7 +120,7 @@ public class Usercontroller {
 
         }
     }
-
+    //로그인하기
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserRequestDTO dto){
         log.info("/auth/login POST - login info : {}",dto);

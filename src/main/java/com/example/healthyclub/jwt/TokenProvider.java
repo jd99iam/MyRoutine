@@ -33,7 +33,7 @@ public class TokenProvider {
                 //header에 들어갈 내용 및 서명을 위한 SECRET_KEY
                 .signWith(Keys.hmacShaKeyFor(SECRET_KEY.getBytes()), SignatureAlgorithm.HS512) //인코딩
                 //payload에 들어갈 내용
-                .setSubject(userEntitiy.getUserId()) //sub - 회원식별자
+                .setSubject(String.valueOf(userEntitiy.getId())) //sub - 회원식별자
                 .setIssuer("healthyclub app") //iss - 토큰발행자 이름
                 .setIssuedAt(new Date()) //iot - 토큰 발행일
                 .setExpiration(expriyDate) //exp - 토큰 만료일
