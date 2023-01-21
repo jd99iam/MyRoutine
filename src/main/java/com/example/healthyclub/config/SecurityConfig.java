@@ -29,10 +29,8 @@ public class SecurityConfig {
                 .httpBasic().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .authorizeRequests().antMatchers("/auth/login","/auth/join","/auth/show/*").permitAll()
+                .authorizeRequests().antMatchers("/auth/login","/auth/join").permitAll()
                 .anyRequest().authenticated();
-
-        //antMatchers에 입력한 url만 검사를 하지 않음
 
         //토큰 인증 필터 등록
         http.addFilterAfter( //어떤 필터 뒤에 추가한다
