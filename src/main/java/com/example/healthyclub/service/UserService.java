@@ -84,7 +84,4 @@ public class UserService {
         }
         return user; //로그인 성공시 그 회원의 정보를 보여준다.
     }
-
-
-
 }
