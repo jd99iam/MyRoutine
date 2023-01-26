@@ -41,18 +41,24 @@
               </a>
 
               <ul class="dropdown-menu">
-                <li>
+                <li v-if="this.$store.state.authenticated === false">
                   <a class="dropdown-item" href="#"
                     ><router-link to="/login">로그인</router-link></a
                   >
                 </li>
-                <li>
+                <li v-if="this.$store.state.authenticated">
                   <a class="dropdown-item" href="#"
                     ><router-link to="/login">정보수정</router-link></a
                   >
                 </li>
-                <li><a class="dropdown-item" href="#">로그아웃</a></li>
-                <li><a class="dropdown-item" href="#">회원탈퇴</a></li>
+                <li v-if="this.$store.state.authenticated">
+                  <a class="dropdown-item" href="#" @:click="logout"
+                    >로그아웃</a
+                  >
+                </li>
+                <li v-if="this.$store.state.authenticated">
+                  <a class="dropdown-item" href="#">회원탈퇴</a>
+                </li>
               </ul>
             </div>
           </span>
@@ -73,7 +79,11 @@ export default {
   created() {},
   mounted() {},
   unmounted() {},
-  methods: {}
+  methods: {
+    logout() {
+      this.$store.commit('logout')
+    }
+  }
 }
 </script>
 <style scoped>

@@ -12,6 +12,11 @@ export default createStore({
       state.userId = resData.userId
       state.token = resData.token
       state.authenticated = true
+    },
+    logout(state) {
+      state.userId = null
+      state.token = null
+      state.authenticated = false
     }
   },
   actions: {},

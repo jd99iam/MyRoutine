@@ -39,14 +39,6 @@
       </div>
       <div class="col-4"></div>
     </div>
-    <!-- test -->
-    <div>{{ userId }}, {{ userPassword }}</div>
-    <br />
-    <!--testbutton-->
-    <button @click="testMethod">루틴보여주기테스트get</button>
-    <button @click="testMethod2">루틴생성하기테스트post</button>
-    <button @click="testMethod3">로그인테스트</button><br />
-    <div>{{ this.$store.state.userId }},{{ this.$store.state.token }}</div>
   </div>
 </template>
 <script>
@@ -66,49 +58,14 @@ export default {
   mounted() {},
   unmounted() {},
   methods: {
-    loginSubmit() {
-      console.log('test')
-      console.log(
-        'request id' + this.userId + ' reqeust pw' + this.userPassword
-      )
-      axios
-        .post('http://localhost:8081/auth/login', {
-          userId: this.userId,
-          password: this.password
-        })
-        .then((res) => {
-          console.log(res.data)
-        })
-        .then((err) => {
-          console.log(err)
-        })
-        .then(() => {
-          console.log('nothing')
-        })
-    },
-    testMethod() {
-      axios.get('http://localhost:8081/routine/4').then((res) => {
-        console.log(res.data)
-      })
-    },
-    testMethod2() {
-      axios
-        .post('http://localhost:8081/routine/4', {
-          date: '2023-01-09',
-          routine: '루틴생성하기테스트프론트'
-        })
-        .then((res) => {
-          console.log(res.data)
-        })
-    },
     testMethod3() {
       const id = this.userId
       const pw = this.userPassword
-      axios
+      axios // axios로 post 요청보냄
         .post('http://localhost:8081/auth/login', {
           userId: id,
           password: pw
-        })
+        }) // res를 받아서 사용. res.data에 받은 data 있음. store의 login 메소드를 호출해서 store에 userId랑 token 값 넣어줌
         .then((res) => {
           if (res.status === 200) {
             this.$store.commit('login', res.data)
@@ -117,6 +74,7 @@ export default {
         .then((err) => {
           console.log(err)
         })
+        .then(() => {})
     }
   }
 }
