@@ -19,7 +19,17 @@ export default {
   created() {},
   mounted() {},
   unmounted() {},
-  methods: {}
+  methods: {
+    addOne() {
+      this.$store.commit('addOne')
+    },
+    addParam() {
+      this.$store.commit('addParam', 5)
+    },
+    getAlpha() {
+      return this.$store.getters.getAlpha
+    }
+  }
 }
 </script>
 <style></style>
