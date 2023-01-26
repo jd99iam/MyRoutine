@@ -25,7 +25,7 @@
           <button
             style="position: relative; left: 150px"
             class="btn btn-success"
-            @click.prevent="loginSubmit"
+            @click.prevent="testMethod3"
           >
             Login
           </button>
@@ -45,7 +45,8 @@
     <!--testbutton-->
     <button @click="testMethod">루틴보여주기테스트get</button>
     <button @click="testMethod2">루틴생성하기테스트post</button>
-    <button @click="testMethod3">로그인테스트</button>
+    <button @click="testMethod3">로그인테스트</button><br />
+    <div>{{ this.$store.state.userId }},{{ this.$store.state.token }}</div>
   </div>
 </template>
 <script>
@@ -109,7 +110,12 @@ export default {
           password: pw
         })
         .then((res) => {
-          console.log(res.data)
+          if (res.status === 200) {
+            this.$store.commit('login', res.data)
+          }
+        })
+        .then((err) => {
+          console.log(err)
         })
     }
   }
