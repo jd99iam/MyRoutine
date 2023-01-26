@@ -43,7 +43,9 @@
     <div>{{ userId }}, {{ userPassword }}</div>
     <br />
     <!--testbutton-->
-    <button @click="testMethod">testButton</button>
+    <button @click="testMethod">루틴보여주기테스트get</button>
+    <button @click="testMethod2">루틴생성하기테스트post</button>
+    <button @click="testMethod3">로그인테스트</button>
   </div>
 </template>
 <script>
@@ -87,6 +89,28 @@ export default {
       axios.get('http://localhost:8081/routine/4').then((res) => {
         console.log(res.data)
       })
+    },
+    testMethod2() {
+      axios
+        .post('http://localhost:8081/routine/4', {
+          date: '2023-01-09',
+          routine: '루틴생성하기테스트프론트'
+        })
+        .then((res) => {
+          console.log(res.data)
+        })
+    },
+    testMethod3() {
+      const id = this.userId
+      const pw = this.userPassword
+      axios
+        .post('http://localhost:8081/auth/login', {
+          userId: id,
+          password: pw
+        })
+        .then((res) => {
+          console.log(res.data)
+        })
     }
   }
 }

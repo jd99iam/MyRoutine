@@ -51,6 +51,28 @@ public class RoutineService {
         return RoutineDTO.toDTO(created);
     }
 
+    @Transactional
+    public RoutineDTO createTest(RoutineDTO routineDTO,Long userId){
+
+        //유저리포지토리를 이용해서 유저 엔티티 생성 (이 유저의 루틴을 만들것임)
+        UserEntity targetUser = userRepository.findById(userId)
+                .orElseThrow(()->new IllegalArgumentException("RoutineService - create : 존재하지 않는 유저입니다"));
+
+        //인자로 전달된 유저 id와 db에서 찾은 유저 id가 다른지 확인
+        if (userId!=targetUser.getId()){
+            throw new IllegalArgumentException("RoutineService - create : 잘못된 유저 접근입니다 : 유저 id가 일치하지 않습니다");
+        }
+
+        //루틴 엔티티 생성
+        RoutineEntity target = RoutineEntity.toEntity(routineDTO,targetUser);
+
+        //루틴 엔티티 DB에 저장
+        RoutineEntity created = routineRepository.save(target);
+
+        //엔티티를 dto로 변환해서 반환
+        return RoutineDTO.toDTO(created);
+    }
+
     //유저 아이디를 받아서 해당 유저의 루틴들을 List<RoutineDTO> 형태로 반환
     public List<RoutineDTO> showAll(Long userId) {
 
