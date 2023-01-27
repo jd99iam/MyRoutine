@@ -6,6 +6,10 @@
         class="col-4 text-center"
         style="margin-top: 100px; border: 1px solid black; padding: 30px"
       >
+        <div>
+          로그인 했나요 ? : {{ this.$store.state.loginStore.isLogin }}//
+          {{ this.$store.state.loginStore.test }}
+        </div>
         <span style="font-size: 40px">MyRoutine Login</span>
         <hr />
         <form>
@@ -39,6 +43,7 @@
       </div>
       <div class="col-4"></div>
     </div>
+    <br />
   </div>
 </template>
 <script>
@@ -65,16 +70,15 @@ export default {
         .post('http://localhost:8081/auth/login', {
           userId: id,
           password: pw
-        }) // res를 받아서 사용. res.data에 받은 data 있음. store의 login 메소드를 호출해서 store에 userId랑 token 값 넣어줌
+        })
         .then((res) => {
           if (res.status === 200) {
             this.$store.commit('login', res.data)
+            console.log(res)
+          } else {
+            console.log('응답코드 200 아님')
           }
         })
-        .then((err) => {
-          console.log(err)
-        })
-        .then(() => {})
     }
   }
 }

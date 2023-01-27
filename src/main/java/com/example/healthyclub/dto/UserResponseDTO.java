@@ -12,8 +12,10 @@ public class UserResponseDTO {
     private String nickname;
     private String userId;
     private String token;
+    private Long id;
 
     public UserResponseDTO(UserEntity user){
+        this.id = user.getId();
         this.email = user.getEmail();
         this.nickname = user.getNickname();
         this.userId = user.getUserId();

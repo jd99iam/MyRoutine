@@ -36,27 +36,38 @@
                 role="button"
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
+                v-if="!this.$store.state.loginStore.isLogin"
               >
                 내정보
               </a>
+              <a
+                class="btn btn-secondary dropdown-toggle"
+                href="#"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+                v-else
+              >
+                {{ this.$store.state.loginStore.nickname }}님
+              </a>
 
               <ul class="dropdown-menu">
-                <li v-if="this.$store.state.authenticated === false">
+                <li v-if="this.$store.state.loginStore.isLogin === false">
                   <a class="dropdown-item" href="#"
                     ><router-link to="/login">로그인</router-link></a
                   >
                 </li>
-                <li v-if="this.$store.state.authenticated">
+                <li v-if="this.$store.state.loginStore.isLogin">
                   <a class="dropdown-item" href="#"
                     ><router-link to="/login">정보수정</router-link></a
                   >
                 </li>
-                <li v-if="this.$store.state.authenticated">
+                <li v-if="this.$store.state.loginStore.isLogin">
                   <a class="dropdown-item" href="#" @:click="logout"
                     >로그아웃</a
                   >
                 </li>
-                <li v-if="this.$store.state.authenticated">
+                <li v-if="this.$store.state.loginStore.isLogin">
                   <a class="dropdown-item" href="#">회원탈퇴</a>
                 </li>
               </ul>
@@ -71,9 +82,7 @@
 export default {
   components: {},
   data() {
-    return {
-      sampleData: ''
-    }
+    return {}
   },
   setup() {},
   created() {},

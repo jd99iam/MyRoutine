@@ -1,24 +1,16 @@
 import { createStore } from 'vuex'
+import createPersistedState from 'vuex-persistedstate'
+import loginStore from './modules/loginStore'
 
 export default createStore({
-  state: {
-    authenticated: false,
-    userId: null,
-    token: null
-  },
+  state: {},
   getters: {},
-  mutations: {
-    login(state, resData) {
-      state.userId = resData.userId
-      state.token = resData.token
-      state.authenticated = true
-    },
-    logout(state) {
-      state.userId = null
-      state.token = null
-      state.authenticated = false
-    }
-  },
+  mutations: {},
   actions: {},
-  modules: {}
+  modules: { loginStore },
+  plugins: [
+    createPersistedState({
+      paths: ['loginStore']
+    })
+  ]
 })
