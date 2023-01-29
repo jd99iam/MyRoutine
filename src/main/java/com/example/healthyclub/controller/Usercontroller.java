@@ -153,5 +153,16 @@ public class Usercontroller {
         }
     }
 
+    //운동타입에 해당하는 모든 user를 리턴
+    @GetMapping("/showtype/{type}")
+    public ResponseEntity<?> getUserByType(@PathVariable String type){
+        log.info("/auth/show/type -{}",type);
 
+        try{
+            List<UserEntity> userByType = service.getUserByType(type);
+            return ResponseEntity.ok().body(userByType);
+        }catch(RuntimeException e){
+            return ResponseEntity.badRequest().body(new ErrorDTO(e.getMessage()));
+        }
+    }
 }

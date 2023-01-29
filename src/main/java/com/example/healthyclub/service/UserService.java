@@ -93,4 +93,13 @@ public class UserService {
         if (userByName.size() == 0) throw new RuntimeException("해당 이름을 가진 회원이 존재하지 않습니다.");
         return userByName;
     }
+
+    //같은 운동타입의 사람들을 검색하기
+    @Transactional
+    public List<UserEntity> getUserByType(String type){
+        log.info("type - {}",type);
+        List<UserEntity> userByType = repository.getUserByType(type);
+        if(userByType.size() == 0) throw new RuntimeException("해당 운동타입을 가진 회원이 존재하지 않습니다.");
+        return userByType;
+    }
 }

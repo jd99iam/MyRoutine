@@ -19,4 +19,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
     @Query(value = "select * from User where name = :name",nativeQuery = true)
     List<UserEntity> getUserByName(String name);
+
+    @Query(value = "select * from user inner join exercise_type on id = user_entity_id where exercise_type = :type",nativeQuery = true)
+    List<UserEntity> getUserByType(String type);
 }
