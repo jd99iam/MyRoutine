@@ -84,4 +84,13 @@ public class UserService {
         }
         return user; //로그인 성공시 그 회원의 정보를 보여준다.
     }
+
+    //실명(name으로 회원 검색하기)
+    @Transactional
+    public List<UserEntity> getUserByName(String name){
+        log.info("name - {}",name);
+        List<UserEntity> userByName = repository.getUserByName(name);
+        if (userByName.size() == 0) throw new RuntimeException("해당 이름을 가진 회원이 존재하지 않습니다.");
+        return userByName;
+    }
 }

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -139,6 +140,18 @@ public class Usercontroller {
         }
     }
 
+    //실명(name)에 해당되는 모든 user를 리턴
+    @GetMapping("/showname/{name}")
+    public ResponseEntity<?> getUserByName(@PathVariable String name){
+        log.info("/auth/show/name -{}",name);
+
+        try{
+            List<UserEntity> userByName = service.getUserByName(name);
+            return ResponseEntity.ok().body(userByName);
+        }catch(RuntimeException e){
+            return ResponseEntity.badRequest().body(new ErrorDTO(e.getMessage()));
+        }
+    }
 
 
 }
