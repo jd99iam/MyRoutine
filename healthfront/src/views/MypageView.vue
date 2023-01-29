@@ -29,7 +29,7 @@ export default {
       if (this.$store.state.loginStore.isLogin === false) {
         alert('로그인하세요')
       } else {
-        var vm = this
+        const vm = this
         const userPK = this.$store.state.loginStore.id
         const config = {
           hedaers: {

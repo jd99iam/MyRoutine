@@ -112,8 +112,10 @@ public class Usercontroller {
 
         try {
             UserEntity delete = service.delete(id);
+            UserResponseDTO dto = new UserResponseDTO(delete);
+
             log.info("@AuthenticationPrincipal String userId : {}",userId);
-            return ResponseEntity.ok().body(delete);
+            return ResponseEntity.ok().body(dto);
         }catch(Exception e){
             String message = "delete가 잘되지 않았습니다.";
             return ResponseEntity.badRequest().body(new ErrorDTO(message));

@@ -13,19 +13,28 @@
         <span style="font-size: 40px">MyRoutine Login</span>
         <hr />
         <form>
-          <input
-            type="text"
-            class="form-control"
-            name="userId"
-            v-model="userId"
-          />
+          <tr>
+            <th>아이디</th>
+            <input
+              type="text"
+              class="form-control"
+              name="userId"
+              v-model="userId"
+              style="margin-left: 20px"
+            />
+          </tr>
           <br />
-          <input
-            type="password"
-            class="form-control"
-            name="password"
-            v-model="userPassword"
-          /><br />
+          <tr>
+            <th>비밀번호</th>
+            <input
+              type="password"
+              class="form-control"
+              name="password"
+              v-model="userPassword"
+              style="margin-left: 20px"
+            />
+          </tr>
+          <br />
           <button
             style="position: relative; left: 150px"
             class="btn btn-success"
@@ -36,7 +45,7 @@
           <br /><br />
           <span style="position: relative; left: 80px"
             >계정이 없습니까?
-            <router-link to="/singup">회원가입하기</router-link></span
+            <router-link to="/signup">회원가입하기</router-link></span
           >
           >
         </form>
@@ -75,6 +84,7 @@ export default {
           if (res.status === 200) {
             this.$store.commit('login', res.data)
             console.log(res)
+            location.href = '/'
           } else {
             console.log('응답코드 200 아님')
           }
