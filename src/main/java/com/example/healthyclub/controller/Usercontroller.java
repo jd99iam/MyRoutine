@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -112,8 +113,10 @@ public class Usercontroller {
 
         try {
             UserEntity delete = service.delete(id);
+            UserResponseDTO dto = new UserResponseDTO(delete);
+
             log.info("@AuthenticationPrincipal String userId : {}",userId);
-            return ResponseEntity.ok().body(delete);
+            return ResponseEntity.ok().body(dto);
         }catch(Exception e){
             String message = "delete가 잘되지 않았습니다.";
             return ResponseEntity.badRequest().body(new ErrorDTO(message));
@@ -137,6 +140,29 @@ public class Usercontroller {
         }
     }
 
+    //실명(name)에 해당되는 모든 user를 리턴
+    @GetMapping("/showname/{name}")
+    public ResponseEntity<?> getUserByName(@PathVariable String name){
+        log.info("/auth/show/name -{}",name);
 
+        try{
+            List<UserEntity> userByName = service.getUserByName(name);
+            return ResponseEntity.ok().body(userByName);
+        }catch(RuntimeException e){
+            return ResponseEntity.badRequest().body(new ErrorDTO(e.getMessage()));
+        }
+    }
 
+    //운동타입에 해당하는 모든 user를 리턴
+    @GetMapping("/showtype/{type}")
+    public ResponseEntity<?> getUserByType(@PathVariable String type){
+        log.info("/auth/show/type -{}",type);
+
+        try{
+            List<UserEntity> userByType = service.getUserByType(type);
+            return ResponseEntity.ok().body(userByType);
+        }catch(RuntimeException e){
+            return ResponseEntity.badRequest().body(new ErrorDTO(e.getMessage()));
+        }
+    }
 }

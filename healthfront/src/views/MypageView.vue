@@ -63,7 +63,7 @@ export default {
         alert('로그인하세요')
         document.location = 'http://localhost:8080/login' // 로그인하지 않았을 경우 로그인 페이지로 이동시킴
       } else {
-        var vm = this
+        const vm = this
         const userPK = this.$store.state.loginStore.id
         const config = {
           headers: {
