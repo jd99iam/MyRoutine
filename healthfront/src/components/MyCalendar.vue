@@ -31,7 +31,7 @@
 // import VDatePicker from 'v-calendar/lib/components/date-picker.umd'
 export default {
   components: {},
-  data() {
+  data () {
     return {
       date: new Date(), // Date 객체 생성 현재 Date
       year: null,
@@ -45,9 +45,9 @@ export default {
       dates: [] // 이번 달의 dates 2차원배열로 줄을 구분해서 만들자
     }
   },
-  setup() {},
-  created() {},
-  mounted() {
+  setup () {},
+  created () {},
+  mounted () {
     this.year = this.date.getFullYear() // 현재 년도
     this.month = this.date.getMonth() // 현재 월
     this.nowMonthEnd = new Date(this.year, this.month + 1, 0).getDate()
@@ -55,9 +55,9 @@ export default {
     this.nowMonthStartDate = new Date(this.year, this.month, 1)
     this.calendarLines = (this.nowMonthEnd + this.nowMonthStartDay) / 7 + 1
   },
-  unmounted() {},
+  unmounted () {},
   methods: {
-    nextMonth() {
+    nextMonth () {
       this.month += 1
       if (this.month === 12) {
         this.month = 0
@@ -66,13 +66,13 @@ export default {
       this.nowMonthEnd = new Date(this.year, this.month + 1, 0).getDate()
       this.nowMonthStartDay = new Date(this.year, this.month, 1).getDay()
       this.dates = []
-      for (var i = 1; i <= this.nowMonthEnd; i++) {
+      for (let i = 1; i <= this.nowMonthEnd; i++) {
         this.dates.push(new Date(this.year, this.month, i).getDate())
       }
       this.calendarLines = (this.nowMonthEnd + this.nowMonthStartDay) / 7
       this.dateIdx = 1
     },
-    previousMonth() {
+    previousMonth () {
       this.month -= 1
       if (this.month === -1) {
         this.month = 11
@@ -81,13 +81,13 @@ export default {
       this.nowMonthEnd = new Date(this.year, this.month + 1, 0).getDate()
       this.nowMonthStartDay = new Date(this.year, this.month, 1).getDay()
       this.dates = []
-      for (var i = 1; i <= this.nowMonthEnd; i++) {
+      for (let i = 1; i <= this.nowMonthEnd; i++) {
         this.dates.push(new Date(this.year, this.month, i).getDate())
       }
       this.calendarLines = (this.nowMonthEnd + this.nowMonthStartDay) / 7
       this.dateIdx = 1
     },
-    makeMatrix() {
+    makeMatrix () {
       this.dates = []
     }
   }

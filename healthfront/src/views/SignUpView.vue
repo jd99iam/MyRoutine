@@ -205,7 +205,7 @@ import axios from 'axios'
 
 export default {
   components: {},
-  data() {
+  data () {
     return {
       name: null,
       userId: null,
@@ -221,12 +221,12 @@ export default {
       exerciseType: []
     }
   },
-  setup() {},
-  created() {},
-  mounted() {},
-  unmounted() {},
+  setup () {},
+  created () {},
+  mounted () {},
+  unmounted () {},
   methods: {
-    joinMethod() {
+    joinMethod () {
       const name = this.name
       const id = this.userId
       const pw = this.password

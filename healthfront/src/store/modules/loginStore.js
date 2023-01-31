@@ -8,14 +8,14 @@ const loginStore = {
     token: null
   },
   mutations: {
-    login(state, data) {
+    login (state, data) {
       state.isLogin = true
       state.id = data.id
       state.userId = data.userId
       state.nickname = data.nickname
       state.token = data.token
     },
-    logout(state) {
+    logout (state) {
       state.isLogin = false
       state.id = null
       state.userId = null

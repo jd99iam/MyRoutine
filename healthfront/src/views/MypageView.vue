@@ -46,19 +46,19 @@ export default {
   components: {
     // calendar
   },
-  data() {
+  data () {
     return {
       routines: null
     }
   },
-  setup() {},
-  created() {},
-  mounted() {
+  setup () {},
+  created () {},
+  mounted () {
     this.showRoutine()
   },
-  unmounted() {},
+  unmounted () {},
   methods: {
-    showRoutine() {
+    showRoutine () {
       if (this.$store.state.loginStore.isLogin === false) {
         alert('로그인하세요')
         document.location = 'http://localhost:8080/login' // 로그인하지 않았을 경우 로그인 페이지로 이동시킴
@@ -77,14 +77,14 @@ export default {
           })
       }
     },
-    routineStore(event) {
+    routineStore (event) {
       console.log(event.target)
       this.$store.state.routineStore.routineId =
         event.target.getAttribute('routineId')
     },
-    deleteRoutine(event) {
+    deleteRoutine (event) {
       const userPK = this.$store.state.loginStore.id
-      var rid = event.target.getAttribute('routineId')
+      const rid = event.target.getAttribute('routineId')
       const config = {
         headers: {
           Authorization: 'Bearer ' + this.$store.state.loginStore.token

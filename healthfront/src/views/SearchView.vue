@@ -45,26 +45,26 @@
 import axios from 'axios'
 export default {
   components: {},
-  data() {
+  data () {
     return {
       name: null,
       lists: [],
       type: '이름'
     }
   },
-  setup() {},
-  created() {},
-  mounted() {},
-  unmounted() {},
+  setup () {},
+  created () {},
+  mounted () {},
+  unmounted () {},
   methods: {
-    typeToName() {
+    typeToName () {
       this.type = '이름'
       console.log(this.type)
     },
-    typeToExercise() {
+    typeToExercise () {
       this.type = '운동타입'
     },
-    searchMethod() {
+    searchMethod () {
       const name = this.name
       let type = ''
       if (this.type === '이름') type = 'name'

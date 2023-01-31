@@ -20,15 +20,15 @@ export default {
     MyHeader,
     MyFooter
   },
-  data() {
+  data () {
     return {
       sampleData: ''
     }
   },
-  setup() {},
-  created() {},
-  mounted() {},
-  unmounted() {},
+  setup () {},
+  created () {},
+  mounted () {},
+  unmounted () {},
   methods: {}
 }
 </script>

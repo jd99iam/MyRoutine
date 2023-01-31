@@ -81,15 +81,15 @@
 <script>
 export default {
   components: {},
-  data() {
+  data () {
     return {}
   },
-  setup() {},
-  created() {},
-  mounted() {},
-  unmounted() {},
+  setup () {},
+  created () {},
+  mounted () {},
+  unmounted () {},
   methods: {
-    logout() {
+    logout () {
       this.$store.commit('logout')
     }
   }

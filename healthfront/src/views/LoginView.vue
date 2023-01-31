@@ -61,18 +61,18 @@ import axios from 'axios'
 
 export default {
   components: {},
-  data() {
+  data () {
     return {
       userId: null,
       userPassword: null
     }
   },
-  setup() {},
-  created() {},
-  mounted() {},
-  unmounted() {},
+  setup () {},
+  created () {},
+  mounted () {},
+  unmounted () {},
   methods: {
-    testMethod3() {
+    testMethod3 () {
       const id = this.userId
       const pw = this.userPassword
       axios // axios로 post 요청보냄

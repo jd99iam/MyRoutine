@@ -15,22 +15,22 @@ import axios from 'axios'
 
 export default {
   components: {},
-  data() {
+  data () {
     return {
       date: null,
       content: null
     }
   },
-  setup() {},
-  created() {},
-  mounted() {
+  setup () {},
+  created () {},
+  mounted () {
     this.getRoutine()
   },
-  unmounted() {},
+  unmounted () {},
   methods: {
-    getRoutine() {
-      var vm = this
-      var rid = this.$store.state.routineStore.routineId
+    getRoutine () {
+      const vm = this
+      const rid = this.$store.state.routineStore.routineId
       const userPK = this.$store.state.loginStore.id
       const config = {
         headers: {
@@ -44,10 +44,10 @@ export default {
           vm.content = res.data.routine
         })
     },
-    submitPatch() {
-      var vm = this
+    submitPatch () {
+      const vm = this
       const userPK = this.$store.state.loginStore.id
-      var rid = this.$store.state.routineStore.routineId
+      const rid = this.$store.state.routineStore.routineId
       const config = {
         headers: {
           Authorization: 'Bearer ' + this.$store.state.loginStore.token
