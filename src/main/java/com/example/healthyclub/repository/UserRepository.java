@@ -22,4 +22,9 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
     @Query(value = "select * from user inner join exercise_type on id = user_entity_id where exercise_type = :type",nativeQuery = true)
     List<UserEntity> getUserByType(String type);
+
+    @Query(value = "select count(*) from friend_table where user_entity_id=:id and friends = :friends",nativeQuery = true)
+    int booleanFriends(String id, String friends);
+
+
 }

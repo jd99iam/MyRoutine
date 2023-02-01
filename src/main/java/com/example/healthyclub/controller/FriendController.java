@@ -11,6 +11,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -24,10 +25,13 @@ public class FriendController {
 
 
     //친구를 추가하기 @Pathvariable의 id는 내가 친구를 추가하려는 사람의 id, @Auth의 identifyId는 나 자신
-    @PostMapping("/{id}")
+    @GetMapping("/get/{id}")
     @Transactional
     public ResponseEntity<?> addFriends(@PathVariable Long id, @AuthenticationPrincipal String identifyId) {
+        log.info("나 자신 {}",identifyId);
+        log.info("친구 추가하려는 아이디: {}",id);
         long longId = Long.parseLong(identifyId);
+
         List<String> friends = userRepository.getUserById(longId).getFriends();
         String stringId = String.valueOf(id);
         UserEntity userById = userRepository.getUserById(id);
@@ -66,10 +70,22 @@ public class FriendController {
     public ResponseEntity<?> deleteFriends(@AuthenticationPrincipal String identifyId) {
         long longId = Long.parseLong(identifyId);
         List<String> friends = userRepository.getUserById(longId).getFriends();
-
-        return ResponseEntity.ok().body(friends);
-
+        List<UserEntity> friendslist = new ArrayList<>();
+        for (String friend : friends) {
+            UserEntity userByUserId = userRepository.getUserById(Long.parseLong(friend));
+            friendslist.add(userByUserId);
+        }
+        return ResponseEntity.ok().body(friendslist);
     }
 
+    //그들이 이미 친구인지 아닌지 알려주기
+    //그들이 이미 친구면 1(true)를 반환, 친구가 아직 아니라면 false(0)을 반환
+    @PostMapping("/truefalse/{id}")
+    @Transactional
+    public ResponseEntity<?> booleanFriends(@PathVariable String id, @AuthenticationPrincipal String tokenId){
+        int flag = userRepository.booleanFriends(tokenId, id);
+
+        return ResponseEntity.ok().body(flag);
+    }
 
 }

@@ -41,9 +41,7 @@
         본인입니다.
         </span>
         <span v-else-if="lists.id !== this.$store.state.loginStore.id" >
-        <button v-if="friendstf === 0" @click="plusFriendMethod(lists.id)">{{message}} </button>
-        <button  v-else-if="friendstf === 1" >이미 친구입니다. </button>
-
+        <button v-if="friendstf === 0" @click="plusFriendMethod(lists.id)">친구 추가</button>
         </span>
       </li>
     </ul>
@@ -60,8 +58,7 @@ export default {
       lists: [],
       type: '이름',
       tokens: this.$store.state.loginStore.token,
-      friendstf: 0,
-      message: '친구 추가'
+      friendstf: 0
     }
   },
   setup () {},
@@ -101,6 +98,7 @@ export default {
       axios
         .get(`http://localhost:8081/friend/get/${friendPK}`, config)
         .then((res) => {
+          alert('친구가 추가되었습니다.')
           console.log(res)
           this.message = '추가된 친구입니다.'
         })
