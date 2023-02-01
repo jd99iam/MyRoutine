@@ -36,9 +36,18 @@
     </nav>
     <ul>
       <li v-for="lists in lists" v-bind:key="lists">
-        이름 : {{ lists.name }} || 나이 : {{ lists.age }}
+        이름 : {{ lists.name }} || 나이 : {{ lists.age }} || 식별번호(ID) : {{ lists.id }}
+        <span v-if="lists.id === this.$store.state.loginStore.id">
+        본인입니다.
+        </span>
+        <span v-else-if="lists.id !== this.$store.state.loginStore.id" :on-change="FriendMethod(lists.id)">
+        <button v-if="friendstf < 1" @click="plusFriendMethod(lists.id)">친구추가 </button>
+        <button  v-if="friendstf > 0" >이미 친구입니다. </button>
+
+        </span>
       </li>
     </ul>
+
   </div>
 </template>
 <script>
@@ -49,7 +58,9 @@ export default {
     return {
       name: null,
       lists: [],
-      type: '이름'
+      type: '이름',
+      tokens: this.$store.state.loginStore.token,
+      friendstf: 0
     }
   },
   setup () {},
@@ -57,6 +68,42 @@ export default {
   mounted () {},
   unmounted () {},
   methods: {
+    FriendMethod (id) {
+      const friendPK = id
+      const token = this.tokens
+      const config = {
+        headers: {
+          Authorization: 'Bearer ' + token
+        }
+      }
+      axios
+        .post(`http://localhost:8081/friend/truefalse/${friendPK}`, {
+          id: friendPK
+        }, config)
+        .then((res) => {
+          if (res.data === 1) {
+            this.friendstf = 1
+          } else {
+            this.friendstf = 0
+          }
+        })
+    },
+    plusFriendMethod (id) {
+      const friendPK = id
+      const token = this.tokens
+      const config = {
+        headers: {
+          Authorization: 'Bearer ' + token
+        }
+      }
+      console.log(config)
+      axios
+        .get(`http://localhost:8081/friend/get/${friendPK}`, config)
+        .then((res) => {
+          console.log(res)
+          this.friendstf = 1
+        })
+    },
     typeToName () {
       this.type = '이름'
       console.log(this.type)
