@@ -1,8 +1,14 @@
 const routineStore = {
   state: {
-    routineId: null
+    routineId: null,
+    routineUserId: null
   },
-  mutations: {},
+  mutations: {
+    setRoutineStore(state, ids) {
+      state.routineId = ids.rid
+      state.routineUserId = ids.ruid
+    }
+  },
   getters: {},
   actions: {}
 }

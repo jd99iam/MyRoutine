@@ -54,6 +54,12 @@ const routes = [
     name: 'routinePost',
     component: () =>
       import(/* webpackChunkName: "about" */ '../views/RoutinePostView.vue')
+  },
+  {
+    path: '/routineCopy',
+    name: 'routineCopy',
+    component: () =>
+      import(/* webpackChunkName: "about" */ '../views/RoutineCopyView.vue')
   }
 ]
 
