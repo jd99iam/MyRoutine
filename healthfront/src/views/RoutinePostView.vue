@@ -15,18 +15,18 @@ import axios from 'axios'
 
 export default {
   components: {},
-  data () {
+  data() {
     return {
       date: null,
       content: null
     }
   },
-  setup () {},
-  created () {},
-  mounted () {},
-  unmounted () {},
+  setup() {},
+  created() {},
+  mounted() {},
+  unmounted() {},
   methods: {
-    submitPost () {
+    submitPost() {
       const vm = this
       const userPK = this.$store.state.loginStore.id
       const config = {

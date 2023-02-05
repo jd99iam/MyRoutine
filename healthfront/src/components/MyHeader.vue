@@ -2,9 +2,16 @@
 <template>
   <div>
     <!-- nav bar -->
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <nav class="navbar navbar-expand-lg bg-primary" style="padding: 50px">
       <div class="container-fluid">
-        <a class="navbar-brand" href="/myPage" style="margin-left: 200px"
+        <a
+          class="navbar-brand"
+          href="/myPage"
+          style="
+            margin-left: 100px;
+            font-size: 50px;
+            text-shadow: 1px 1px 2px black;
+          "
           >MyRoutine</a
         >
         <button
@@ -21,17 +28,21 @@
         <div class="collapse navbar-collapse" id="navbarText">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
-              <router-link to="/search">search</router-link>
+              <router-link to="/search" style="margin-left: 50px"
+                >search</router-link
+              >
             </li>
             <li class="nav-item">
-              <router-link to="/friends">friends</router-link>
+              <router-link to="/friends" style="margin-left: 50px"
+                >friends</router-link
+              >
             </li>
           </ul>
           <!-- dropdown -->
           <span class="navbar-text" style="margin-right: 200px">
             <div class="dropdown">
               <a
-                class="btn btn-secondary dropdown-toggle"
+                class="btn btn-primary dropdown-toggle"
                 href="#"
                 role="button"
                 data-bs-toggle="dropdown"
@@ -41,7 +52,7 @@
                 내정보
               </a>
               <a
-                class="btn btn-secondary dropdown-toggle"
+                class="btn btn-primary dropdown-toggle"
                 href="#"
                 role="button"
                 data-bs-toggle="dropdown"
@@ -58,9 +69,7 @@
                   >
                 </li>
                 <li v-if="this.$store.state.loginStore.isLogin">
-                  <a class="dropdown-item" href="#"
-                    ><router-link to="/login">정보수정</router-link></a
-                  >
+                  <a class="dropdown-item" href="/login">정보수정</a>
                 </li>
                 <li v-if="this.$store.state.loginStore.isLogin">
                   <a class="dropdown-item" href="#" @:click="logout"
@@ -81,16 +90,17 @@
 <script>
 export default {
   components: {},
-  data () {
+  data() {
     return {}
   },
-  setup () {},
-  created () {},
-  mounted () {},
-  unmounted () {},
+  setup() {},
+  created() {},
+  mounted() {},
+  unmounted() {},
   methods: {
-    logout () {
+    logout() {
       this.$store.commit('logout')
+      document.location = '/'
     }
   }
 }
@@ -105,5 +115,11 @@ export default {
 }
 nav {
   height: 80px;
+}
+a {
+  text-decoration-line: none;
+  font-size: 30px;
+  color: black;
+  text-shadow: 1px 1px 2px black;
 }
 </style>

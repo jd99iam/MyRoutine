@@ -1,7 +1,7 @@
 <template>
   <div>
     <label for="exampleInputEmail1" class="form-label">날짜</label>
-    <input class="form-control" v-model="date" />
+    <input class="form-control" type="date" v-model="date" />
     <label for="exampleInputEmail1" class="form-label">루틴</label>
     <input class="form-control" v-model="content" />
     <button @click="submitPatch">수정완료</button>
@@ -15,20 +15,20 @@ import axios from 'axios'
 
 export default {
   components: {},
-  data () {
+  data() {
     return {
       date: null,
       content: null
     }
   },
-  setup () {},
-  created () {},
-  mounted () {
+  setup() {},
+  created() {},
+  mounted() {
     this.getRoutine()
   },
-  unmounted () {},
+  unmounted() {},
   methods: {
-    getRoutine () {
+    getRoutine() {
       const vm = this
       const rid = this.$store.state.routineStore.routineId
       const userPK = this.$store.state.loginStore.id
@@ -44,7 +44,7 @@ export default {
           vm.content = res.data.routine
         })
     },
-    submitPatch () {
+    submitPatch() {
       const vm = this
       const userPK = this.$store.state.loginStore.id
       const rid = this.$store.state.routineStore.routineId

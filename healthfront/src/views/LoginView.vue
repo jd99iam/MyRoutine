@@ -89,6 +89,10 @@ export default {
             console.log('응답코드 200 아님')
           }
         })
+        .catch((err) => {
+          console.log(err)
+          alert('로그인 정보 불일치')
+        })
     }
   }
 }
