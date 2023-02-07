@@ -23,5 +23,4 @@ public class UserRequestDTO {
     private List<String> exerciseType;
 
 
-
 }

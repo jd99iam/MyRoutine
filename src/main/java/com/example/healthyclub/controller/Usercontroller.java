@@ -6,16 +6,22 @@ import com.example.healthyclub.entity.UserEntity;
 import com.example.healthyclub.error.ErrorDTO;
 import com.example.healthyclub.jwt.TokenProvider;
 import com.example.healthyclub.service.UserService;
+import com.example.healthyclub.util.FileUploadUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.coyote.Response;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import javax.transaction.Transactional;
+
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @Slf4j
@@ -27,19 +33,45 @@ public class Usercontroller {
     private final UserService service;
     private final TokenProvider provider;
 
+    @Value("${upload.path}")
+    private String uploadRootPath;
+
     //회원가입하기
     @PostMapping("/join")
-    public ResponseEntity<?> join(@RequestBody UserRequestDTO dto){
+    public ResponseEntity<?> join(@RequestPart UserRequestDTO dto,
+                                  @RequestPart(value = "profileImg", required = false) MultipartFile profileImg) throws IOException {
 
+        log.info("/auth/join - {}",dto);
+        //입력받은 userRequestDTO를 userEntity 타입으로 변환해준다
+        UserEntity userEntity = new UserEntity(dto);
         try {
-            log.info("/auth/join - {}",dto);
-            //입력받은 userRequestDTO를 userEntity 타입으로 변환해준다
-            UserEntity userEntity = new UserEntity(dto);
+            if(profileImg != null){
+                log.info("profileImg : {}",profileImg.getOriginalFilename());
+
+                //1.서버에 이미지파일을 저장, 이미지를 서버에 업로드
+                //1-a.파일 저장 위치를 지정하여 파일 객체에 포장
+                String originalFilename = profileImg.getOriginalFilename();
+                //1-a-1.파일명이 중복되지 않도록 변경
+                String uploadFileName = UUID.randomUUID() + "_" + originalFilename;
+                //1-a-2.압럳, 폴더를 날짜별로 생성
+                String newUploadPath = FileUploadUtil.makeUploadDirectory(uploadRootPath);
+                File uploadFile = new File(newUploadPath + File.separator + uploadFileName);
+                //1-b. 파일을 해당 경로에 업로드
+                profileImg.transferTo(uploadFile);
+
+                String savePath
+                        = newUploadPath.substring(uploadRootPath.length());
+
+                userEntity.setProfileImg(savePath + File.separator + uploadFileName);
+
+            }
+
             LocalDate date = LocalDate.now();
             userEntity.setJoinDate(date);
             userEntity.setUpdateDate(date);
             UserEntity user = service.create(userEntity);
-
+            log.info("dto는 -{}",dto);
+            log.info("profileImg는 -{}",profileImg);
             return ResponseEntity.ok().body(user);
 
         }catch(RuntimeException e){

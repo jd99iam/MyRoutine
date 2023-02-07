@@ -59,6 +59,11 @@ public class UserEntity {
     @Column
     private int age;
 
+    //프로필 사진
+    @Column
+    @Nullable
+    private String profileImg;
+
     //운동 종목
     @Column
     @Nullable
@@ -90,5 +95,6 @@ public class UserEntity {
         this.phone = dto.getPhone();
         this.age = dto.getAge();
         this.exerciseType = dto.getExerciseType();
+
     }
 }

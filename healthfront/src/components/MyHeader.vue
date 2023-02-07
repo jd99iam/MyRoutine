@@ -68,6 +68,11 @@
                     ><router-link to="/login">로그인</router-link></a
                   >
                 </li>
+                <li v-if="this.$store.state.loginStore.isLogin === false">
+                  <a class="dropdown-item" href="#"
+                    ><router-link to="/signup">회원가입하기</router-link></a
+                  >
+                </li>
                 <li v-if="this.$store.state.loginStore.isLogin">
                   <a class="dropdown-item" href="/login">정보수정</a>
                 </li>
