@@ -4,8 +4,7 @@
     <ul>
       <li v-for="list in lists" v-bind:key="list">
         <button @click=";[showRoutine(list.id), setVal(list.id)]">
-          이름 : {{ list.name }} || 나이 : {{ list.age }} || 식별번호(ID) :
-          {{ lists.id }}
+          이름 : {{ list.name }} || 나이 : {{ list.age }} || 식별번호(ID) : {{ list.id }}
         </button>
       </li>
     </ul>

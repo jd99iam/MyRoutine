@@ -34,21 +34,39 @@
         </form>
       </div>
     </nav>
-    <ul>
-      <li v-for="lists in lists" v-bind:key="lists">
-        이름 : {{ lists.name }} || 나이 : {{ lists.age }} || 식별번호(ID) : {{ lists.id }}
+    <table class="table">
+  <thead>
+    <tr>
+      <th scope="col"></th>
+      <th scope="col">이름</th>
+      <th scope="col">나이</th>
+      <th scope="col">식별번호</th>
+      <th scope="col">친구여부</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr v-for="lists in lists" v-bind:key="lists">
+      <th scope="row"></th>
+      <td>{{ lists.name }}</td>
+      <td>{{ lists.age }}</td>
+      <td>{{ lists.id }}</td>
+      <td>
         <span v-if="lists.id === this.$store.state.loginStore.id">
-        본인입니다.
+          <button type="button" class="btn btn-light" disabled>본인입니다</button>
         </span>
         <span v-else-if="lists.id !== this.$store.state.loginStore.id" >
-        <button v-if="friendstf === 0" @click="plusFriendMethod(lists.id)">친구 추가</button>
+        <button type="button" class="btn btn-light" v-if="lists2.includes(lists.id)" disabled>이미 친구입니다</button>
+        <button type="button" class="btn btn-dark" v-else @click="plusFriendMethod(lists.id)">친구 추가</button>
         </span>
-      </li>
-    </ul>
+      </td>
+    </tr>
 
-  </div>
+  </tbody>
+</table>
+</div>
 </template>
 <script>
+
 import axios from 'axios'
 export default {
   components: {},
@@ -58,32 +76,27 @@ export default {
       lists: [],
       type: '이름',
       tokens: this.$store.state.loginStore.token,
-      friendstf: 0
+      lists2: []
     }
   },
   setup () {},
   created () {},
-  mounted () {},
+  mounted () {
+    this.show()
+  },
   unmounted () {},
   methods: {
-    FriendMethod (id) {
-      const friendPK = id
+    show () {
       const token = this.tokens
       const config = {
         headers: {
           Authorization: 'Bearer ' + token
         }
       }
-      axios
-        .post(`http://localhost:8081/friend/truefalse/${friendPK}`, {
-          id: friendPK
-        }, config)
+      axios.get('http://localhost:8081/friend/showid', config)
         .then((res) => {
-          if (res.data === 1) {
-            this.friendstf = 1
-          } else {
-            this.friendstf = 0
-          }
+          this.lists2 = res.data
+          console.log(this.lists2)
         })
     },
     plusFriendMethod (id) {
@@ -101,6 +114,7 @@ export default {
           alert('친구가 추가되었습니다.')
           console.log(res)
           this.message = '추가된 친구입니다.'
+          this.lists2.push(friendPK)
         })
     },
     typeToName () {

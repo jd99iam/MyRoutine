@@ -67,13 +67,26 @@ public class FriendController {
     //나의 모든 친구 목록들을 보여주기
     @GetMapping("/show")
     @Transactional
-    public ResponseEntity<?> deleteFriends(@AuthenticationPrincipal String identifyId) {
+    public ResponseEntity<?> showFriends(@AuthenticationPrincipal String identifyId) {
         long longId = Long.parseLong(identifyId);
         List<String> friends = userRepository.getUserById(longId).getFriends();
         List<UserEntity> friendslist = new ArrayList<>();
         for (String friend : friends) {
             UserEntity userByUserId = userRepository.getUserById(Long.parseLong(friend));
             friendslist.add(userByUserId);
+        }
+        return ResponseEntity.ok().body(friendslist);
+    }
+    //나의 모든 친구 목록들을 보여주기
+    @GetMapping("/showid")
+    @Transactional
+    public ResponseEntity<?> showFriendsid(@AuthenticationPrincipal String identifyId) {
+        long longId = Long.parseLong(identifyId);
+        List<String> friends = userRepository.getUserById(longId).getFriends();
+        List<Long> friendslist = new ArrayList<>();
+        for (String friend : friends) {
+            Long id = userRepository.getUserById(Long.parseLong(friend)).getId();
+            friendslist.add(id);
         }
         return ResponseEntity.ok().body(friendslist);
     }
@@ -84,7 +97,7 @@ public class FriendController {
     @Transactional
     public ResponseEntity<?> booleanFriends(@PathVariable String id, @AuthenticationPrincipal String tokenId){
         int flag = userRepository.booleanFriends(tokenId, id);
-
+        log.info("flag - {}",flag);
         return ResponseEntity.ok().body(flag);
     }
 
