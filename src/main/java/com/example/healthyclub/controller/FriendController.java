@@ -77,6 +77,21 @@ public class FriendController {
         }
         return ResponseEntity.ok().body(friendslist);
     }
+
+    //친구 숫자
+    @GetMapping("/showcount")
+    @Transactional
+    public ResponseEntity<?> showFriendsCount(@AuthenticationPrincipal String identifyId) {
+        long longId = Long.parseLong(identifyId);
+        List<String> friends = userRepository.getUserById(longId).getFriends();
+        List<UserEntity> friendslist = new ArrayList<>();
+        for (String friend : friends) {
+            UserEntity userByUserId = userRepository.getUserById(Long.parseLong(friend));
+            friendslist.add(userByUserId);
+        }
+        int size = friendslist.size();
+        return ResponseEntity.ok().body(size);
+    }
     //나의 모든 친구 목록들을 보여주기
     @GetMapping("/showid")
     @Transactional
