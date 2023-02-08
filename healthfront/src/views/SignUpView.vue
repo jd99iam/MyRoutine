@@ -12,7 +12,16 @@
           <tr>
             <th>프로필사진</th>
               <input @change="upload" type="file" id="file" name = "profileImg" ref="surveyImage" v-bind:src="profileImg" class="inputfile" />
-          </tr>
+            </tr>
+            <img v-if="this.profileImg !== null" :src = "profileImg" alt = "프로필 썸네일"/>
+            <span v-else>
+              <br/>
+              <img src = "../assets/basic.png" alt = "프로필 썸네일"/>
+              <br/>
+              기본 이미지입니다
+            </span>
+
+          <br/>
           <br />
           <tr>
             <th>실명</th>
@@ -238,9 +247,9 @@ export default {
     upload(e) {
       const imageFile = e.target.files
       const url = URL.createObjectURL(imageFile[0])
+      console.log('ㅋㅋ')
       console.log(url)
       this.profileImg = url
-      console.log(this.profileImg)
     },
     joinMethod () {
       const profileImgs = this.$refs.surveyImage.files[0]
@@ -273,7 +282,7 @@ export default {
           if (res.status === 200) {
             console.log(res)
             alert('회원가입이 정상적으로 이루어졌습니다.')
-            // location.href = '/'
+            location.href = '/'
           } else {
             alert('회원가입이 정상적으로 이루어지지 않았습니다.')
             console.log('응답코드 200 아님')

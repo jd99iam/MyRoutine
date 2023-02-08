@@ -26,5 +26,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     @Query(value = "select count(*) from friend_table where user_entity_id=:id and friends = :friends",nativeQuery = true)
     int booleanFriends(String id, String friends);
 
+    @Query(value = "select profile_img from User where id = :id", nativeQuery = true)
+    String profileImg(Long id);
 
 }

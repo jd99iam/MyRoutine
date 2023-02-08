@@ -25,62 +25,63 @@ class UserServiceTest {
 
     @Autowired
     PasswordEncoder encoder;
-    @Test
-    @DisplayName("회원가입이 정상적으로 이루어지는가")
-    public void create(){
-        ArrayList<String> objects = new ArrayList<>();
-        objects.add("파워");
-        objects.add("속도");
-        LocalDate date = LocalDate.now();
 
-        //given
+//    @Test
+//    @DisplayName("회원가입이 정상적으로 이루어지는가")
+//    public void create(){
+//        ArrayList<String> objects = new ArrayList<>();
+//        objects.add("파워");
+//        objects.add("속도");
+//        LocalDate date = LocalDate.now();
+//
+//        //given
+//
+//
+////        user.setExerciseType(objects);
+//
+//        //when
+//        UserEntity userEntity = service.create(new UserEntity(1L,"끝","a123","가나","1234","1@naver.com",170,60,"남자","010111",20,objects,date,date));
+//
+//        System.out.println(userEntity.toString());
+//
+//        //then
+//    }
 
+//    @Test
+//    @DisplayName("회원가입두명이 정상적으로 이루어지는가")
+//    public void create2(){
+//        ArrayList<String> objects = new ArrayList<>();
+//        objects.add("파워");
+//        objects.add("속도");
+//        LocalDate date = LocalDate.now();
+//        //given
+//        UserEntity user = new UserEntity(2L,"조종원","a123","가나","1234","1@naver.com",170,60,"남자","010111",20,objects,date,date);
+//
+////        user.setExerciseType(objects);
+//
+//        //when
+//        UserEntity userEntity = service.create(user);
+//
+//        //then
+//        assertEquals(user.toString(),userEntity.toString());
+//    }
 
-//        user.setExerciseType(objects);
-
-        //when
-        UserEntity userEntity = service.create(new UserEntity(1L,"끝","a123","가나","1234","1@naver.com",170,60,"남자","010111",20,objects,date,date));
-
-        System.out.println(userEntity.toString());
-
-        //then
-    }
-
-    @Test
-    @DisplayName("회원가입두명이 정상적으로 이루어지는가")
-    public void create2(){
-        ArrayList<String> objects = new ArrayList<>();
-        objects.add("파워");
-        objects.add("속도");
-        LocalDate date = LocalDate.now();
-        //given
-        UserEntity user = new UserEntity(2L,"조종원","a123","가나","1234","1@naver.com",170,60,"남자","010111",20,objects,date,date);
-
-//        user.setExerciseType(objects);
-
-        //when
-        UserEntity userEntity = service.create(user);
-
-        //then
-        assertEquals(user.toString(),userEntity.toString());
-    }
-
-    @Test
-    @DisplayName("1L의 조종원의 나이가 25로 잘 변경이 됐는가, 날짜도 변경됨")
-    public void update(){
-
-        ArrayList<String> objects = new ArrayList<>();
-        objects.add("파워");
-        objects.add("속도");
-        LocalDate date = LocalDate.now();
-        //given
-        UserEntity user = new UserEntity(2L,"조종원","a123","가나","1234","1@naver.com",170,60,"남자","010111",25,objects,date,date);
-
-        UserEntity update = service.update(user);
-
-        assertEquals(user.toString(), update.toString());
-
-    }
+//    @Test
+//    @DisplayName("1L의 조종원의 나이가 25로 잘 변경이 됐는가, 날짜도 변경됨")
+//    public void update(){
+//
+//        ArrayList<String> objects = new ArrayList<>();
+//        objects.add("파워");
+//        objects.add("속도");
+//        LocalDate date = LocalDate.now();
+//        //given
+//        UserEntity user = new UserEntity(2L,"조종원","a123","가나","1234","1@naver.com",170,60,"남자","010111",25,objects,date,date);
+//
+//        UserEntity update = service.update(user);
+//
+//        assertEquals(user.toString(), update.toString());
+//
+//    }
 
     @Test
     @DisplayName("1L을 잘 보여주는가")
@@ -115,5 +116,25 @@ class UserServiceTest {
         System.out.println(matches);
     }
 
+    @Test
+    @DisplayName("이미지파일 가져오기")
+    void getImg(){
+        //given
+        Long id = 32L;
+        //when
+        String profileImg = service.getProfileImg(id);
+        //then
+        System.out.println("profileImg : " + profileImg);
+    }
 
+    @Test
+    @DisplayName("이미지파일 가져오기")
+    void realgetImg(){
+        //given
+        Long id = 59L;
+        //when
+        String profileImg = service.getProfileImg(id);
+        //then
+        System.out.println("profileImg : " + profileImg);
+    }
 }

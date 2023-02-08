@@ -90,19 +90,42 @@
         </div>
       </div>
     </nav>
+    <img :src="profileImg" class="inputfile" alt = "프로필 썸네일" type="file" id="file" name = "profileImg" ref="surveyImage"/>
+    {{ profileImg }}
   </div>
 </template>
 <script>
+import axios from 'axios'
 export default {
   components: {},
   data() {
-    return {}
+    return {
+      profileImg: null
+    }
   },
   setup() {},
   created() {},
-  mounted() {},
+  mounted() {
+    this.getImg()
+  },
   unmounted() {},
   methods: {
+
+    getImg () {
+      const config = {
+        headers: {
+          Authorization: 'Bearer ' + this.$store.state.loginStore.token
+        }
+      }
+      axios
+        .get('http://localhost:8081/auth/load-profile', config)
+        .then((res) => {
+          const blob = new Blob([JSON.stringify(res)], { type: 'application/json' })
+          const blobUrl = window.URL.createObjectURL(blob)
+          console.log(blobUrl)
+          this.profileImg = blobUrl
+        })
+    },
     logout() {
       this.$store.commit('logout')
       document.location = '/'

@@ -11,8 +11,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -196,5 +198,32 @@ public class Usercontroller {
         }catch(RuntimeException e){
             return ResponseEntity.badRequest().body(new ErrorDTO(e.getMessage()));
         }
+    }
+
+    @GetMapping("/load-profile")
+    public ResponseEntity<?> loadProfile(@AuthenticationPrincipal String id) throws IOException {
+        log.info("/auth/load-profile GET - username",id);
+        long longId = Long.parseLong(id);
+        ///해당 유저의 닉네임을 통해서 프로필 사진의 경로를 DB에서 조회
+        //ex) /2023/01/07/ㄺㅎㄹ.파일명.확장자
+        String profilePath = service.getProfileImg(longId);
+
+        //ex) C:/profile_upload/2023/...
+        String fullPath = uploadRootPath + File.separator + profilePath;
+
+        //해당 경로를 파일 객체로 포장
+        File targetFile = new File(fullPath);
+
+        //혹시 해당 파일이 존재하지 않으면 예외가 발생(FileNotFoundException)
+        if(!targetFile.exists()) return ResponseEntity.notFound().build();
+
+        //파일 데이터를 바이트배열로 포장 (blob 데이터)
+        byte[] rawImageData = FileCopyUtils.copyToByteArray(targetFile);
+
+        //응답 헤더 정보 추가
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(FileUploadUtil.getMediaType(profilePath));
+
+        return ResponseEntity.ok().headers(headers).body(rawImageData);
     }
 }

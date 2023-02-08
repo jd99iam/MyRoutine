@@ -102,4 +102,12 @@ public class UserService {
         if(userByType.size() == 0) throw new RuntimeException("해당 운동타입을 가진 회원이 존재하지 않습니다.");
         return userByType;
     }
+
+    //profileImg값 가져오기
+    @Transactional
+    public String getProfileImg(Long id){
+        log.info("id 값 - {}",id);
+        String img = repository.profileImg(id);
+        return img;
+    }
 }
