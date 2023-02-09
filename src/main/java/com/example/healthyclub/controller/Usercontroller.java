@@ -11,7 +11,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.util.FileCopyUtils;
@@ -19,10 +22,15 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -213,17 +221,19 @@ public class Usercontroller {
 
         //해당 경로를 파일 객체로 포장
         File targetFile = new File(fullPath);
-
+        log.info("targetFile - {}",targetFile);
         //혹시 해당 파일이 존재하지 않으면 예외가 발생(FileNotFoundException)
         if(!targetFile.exists()) return ResponseEntity.notFound().build();
 
         //파일 데이터를 바이트배열로 포장 (blob 데이터)
         byte[] rawImageData = FileCopyUtils.copyToByteArray(targetFile);
-
+        log.info("rawImageData - {}",rawImageData);
         //응답 헤더 정보 추가
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(FileUploadUtil.getMediaType(profilePath));
 
         return ResponseEntity.ok().headers(headers).body(rawImageData);
     }
+
+
 }

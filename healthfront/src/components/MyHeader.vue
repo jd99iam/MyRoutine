@@ -90,7 +90,7 @@
         </div>
       </div>
     </nav>
-    <img :src="profileImg" class="inputfile" alt = "프로필 썸네일" type="file" id="file" name = "profileImg" ref="surveyImage"/>
+    <img :src="profileImg" alt = "응애" id = "image"/>
     {{ profileImg }}
   </div>
 </template>
@@ -110,7 +110,6 @@ export default {
   },
   unmounted() {},
   methods: {
-
     getImg () {
       const config = {
         headers: {
@@ -120,10 +119,11 @@ export default {
       axios
         .get('http://localhost:8081/auth/load-profile', config)
         .then((res) => {
-          const blob = new Blob([JSON.stringify(res)], { type: 'application/json' })
-          const blobUrl = window.URL.createObjectURL(blob)
-          console.log(blobUrl)
-          this.profileImg = blobUrl
+          if (res.status === 200) {
+            const pl = new Blob([new ArrayBuffer(res)], { type: 'image/png' })
+            const url = window.URL.createObjectURL(pl)
+            this.profileImg = url
+          }
         })
     },
     logout() {
