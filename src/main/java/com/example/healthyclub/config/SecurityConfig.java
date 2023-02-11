@@ -29,7 +29,7 @@ public class SecurityConfig {
                 .httpBasic().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .authorizeRequests().antMatchers("/friend/*","/auth/**","/auth/login","/auth/join","/routine/*").permitAll()
+                .authorizeRequests().antMatchers("/friend/*","/auth/**","/auth/login","/auth/join","/routine/*","/").permitAll()
                 .anyRequest().authenticated();
 
         //토큰 인증 필터 등록

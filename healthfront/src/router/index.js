@@ -60,6 +60,12 @@ const routes = [
     name: 'routineCopy',
     component: () =>
       import(/* webpackChunkName: "about" */ '../views/RoutineCopyView.vue')
+  },
+  {
+    path: '/imageTest',
+    name: 'imageTest',
+    component: () =>
+      import(/* webpackChunkName: "about" */ '../views/ImageTestView.vue')
   }
 ]
 

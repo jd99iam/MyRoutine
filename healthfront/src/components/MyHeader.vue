@@ -90,7 +90,7 @@
         </div>
       </div>
     </nav>
-    <img :src="profileImg" alt = "응애" id = "image"/>
+    <img :src="profileImg" alt="응애" id="image" />
     {{ profileImg }}
   </div>
 </template>
@@ -110,7 +110,7 @@ export default {
   },
   unmounted() {},
   methods: {
-    getImg () {
+    getImg() {
       const config = {
         headers: {
           Authorization: 'Bearer ' + this.$store.state.loginStore.token
