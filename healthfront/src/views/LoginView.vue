@@ -4,49 +4,59 @@
       <div class="col-4"></div>
       <div
         class="col-4 text-center"
-        style="margin-top: 100px; border: 1px solid black; padding: 30px"
+        style="
+          margin-top: 100px;
+          border: 4px solid black;
+          padding: 30px;
+          box-shadow: 1px 2px 2px gray;
+        "
       >
-        <div>
-          로그인 했나요 ? : {{ this.$store.state.loginStore.isLogin }}//
-          {{ this.$store.state.loginStore.test }}
-        </div>
-        <span style="font-size: 40px">MyRoutine Login</span>
+        <span style="font-size: 40px; text-shadow: 1px 1px 2px gray"
+          ><b>Login</b></span
+        >
         <hr />
         <form>
-          <tr>
-            <th>아이디</th>
-            <input
-              type="text"
-              class="form-control"
-              name="userId"
-              v-model="userId"
-              style="margin-left: 20px"
-            />
-          </tr>
-          <br />
-          <tr>
-            <th>비밀번호</th>
-            <input
-              type="password"
-              class="form-control"
-              name="password"
-              v-model="userPassword"
-              style="margin-left: 20px"
-            />
-          </tr>
+          <table>
+            <tr>
+              <th>아이디</th>
+              <td>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="userId"
+                  v-model="userId"
+                  style="margin-left: 40px"
+                />
+              </td>
+            </tr>
+            <br />
+            <tr>
+              <th>비밀번호</th>
+              <td>
+                <input
+                  type="password"
+                  class="form-control"
+                  name="password"
+                  v-model="userPassword"
+                  style="margin-left: 40px"
+                />
+              </td>
+            </tr>
+          </table>
           <br />
           <button
-            style="position: relative; left: 150px"
-            class="btn btn-success"
+            style="position: relative; left: 130px; border: 2px solid black"
+            class="btn btn-primary"
             @click.prevent="testMethod3"
           >
             Login
           </button>
           <br /><br />
-          <span style="position: relative; left: 80px"
-            >계정이 없습니까?
-            <router-link to="/signup">회원가입하기</router-link></span
-          >
+          <span style="position: relative; left: 55px"
+            ><b
+              >계정이 없습니까?
+              <router-link to="/signup">회원가입하기</router-link></b
+            ></span
           >
         </form>
       </div>
