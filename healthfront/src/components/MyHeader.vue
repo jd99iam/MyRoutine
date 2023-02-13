@@ -90,8 +90,9 @@
         </div>
       </div>
     </nav>
-    <img :src="profileImg" alt = "응애" id = "image"/>
-    {{ profileImg }}
+    <img :src="profileImg" alt = "profileImg입니다" />
+
+    <br/>
   </div>
 </template>
 <script>
@@ -113,15 +114,17 @@ export default {
     getImg () {
       const config = {
         headers: {
-          Authorization: 'Bearer ' + this.$store.state.loginStore.token
-        }
+          Authorization: 'Bearer ' + this.$store.state.loginStore.token,
+          ContentType: 'application/json'
+        },
+        responseType: 'blob'
       }
       axios
         .get('http://localhost:8081/auth/load-profile', config)
         .then((res) => {
           if (res.status === 200) {
-            const pl = new Blob([new ArrayBuffer(res)], { type: 'image/png' })
-            const url = window.URL.createObjectURL(pl)
+            const url = URL.createObjectURL(res.data)
+            console.log(url)
             this.profileImg = url
           }
         })

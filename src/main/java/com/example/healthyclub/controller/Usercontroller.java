@@ -210,7 +210,7 @@ public class Usercontroller {
 
     @GetMapping("/load-profile")
     public ResponseEntity<?> loadProfile(@AuthenticationPrincipal String id) throws IOException {
-        log.info("/auth/load-profile GET - username",id);
+        log.info("/auth/load-profile GET - {}",id);
         long longId = Long.parseLong(id);
         ///해당 유저의 닉네임을 통해서 프로필 사진의 경로를 DB에서 조회
         //ex) /2023/01/07/ㄺㅎㄹ.파일명.확장자
