@@ -11,17 +11,29 @@
         <form>
           <tr>
             <th>프로필사진</th>
-              <input @change="upload" type="file" id="file" name = "profileImg" ref="surveyImage" v-bind:src="profileImg" class="inputfile" />
-            </tr>
-            <img v-if="this.profileImg !== null" :src = "profileImg" alt = "프로필 썸네일"/>
-            <span v-else>
-              <br/>
-              <img src = "../assets/basic.png" alt = "프로필 썸네일"/>
-              <br/>
-              기본 이미지입니다
-            </span>
+            <input
+              @change="upload"
+              type="file"
+              id="file"
+              name="profileImg"
+              ref="surveyImage"
+              v-bind:src="profileImg"
+              class="inputfile"
+            />
+          </tr>
+          <img
+            v-if="this.profileImg !== null"
+            :src="profileImg"
+            alt="프로필 썸네일"
+          />
+          <span v-else>
+            <br />
+            <img src="../assets/basic.png" alt="프로필 썸네일" />
+            <br />
+            기본 이미지입니다
+          </span>
 
-          <br/>
+          <br />
           <br />
           <tr>
             <th>실명</th>
@@ -213,14 +225,13 @@
     </div>
     <br />
   </div>
-
 </template>
 <script>
 import axios from 'axios'
 
 export default {
   components: {},
-  data () {
+  data() {
     return {
       profileImg: null,
       dto: {
@@ -239,21 +250,26 @@ export default {
       }
     }
   },
-  setup () {},
-  created () {},
-  mounted () {},
-  unmounted () {},
+  setup() {},
+  created() {},
+  mounted() {},
+  unmounted() {},
   methods: {
     upload(e) {
       const imageFile = e.target.files
-      const url = URL.createObjectURL(imageFile[0])
+      const url = URL.createObjectURL(imageFile[0]) // [0]을 하는 이유는 데이터가 0 인덱스에 있어서 그럼, createObjectURL에 들어가는 인자는 무조건 blob 객체여야함
+      // URL.createObjectURl의 이유는 처음에 올릴 떄는 blob 형태인데 저장은 url 형태로 해야 해서 바꿔서 하는것임
+      // 이미지를 화면에 표현하기 위해서는 img 태그의 src 값에 url을 넣어줘야하는데
+      // url을 넣어주기 위해 URL.createObjectURL을 사용한 것임
       console.log('ㅋㅋ')
       console.log(url)
       this.profileImg = url
     },
-    joinMethod () {
-      const profileImgs = this.$refs.surveyImage.files[0]
+    joinMethod() {
+      const profileImgs = this.$refs.surveyImage.files[0] // 이미지 바로 가져와서 원래 blob
       const dtos = {
+        // dto니까 blob 으로 바꿔줘야함 : 왜냐하면 multipart-form data에 append 해야해서
+        // dtos는 application/json type
         name: this.dto.name,
         userId: this.dto.userId,
         password: this.dto.password,
@@ -267,7 +283,7 @@ export default {
         exerciseType: this.dto.exerciseType
       }
       const userFormData = new FormData()
-      const dto = new Blob([JSON.stringify(dtos)], { type: 'application/json' })
+      const dto = new Blob([JSON.stringify(dtos)], { type: 'application/json' }) // dtos를 blob 객체화 시켜줌
       userFormData.append('profileImg', profileImgs)
       userFormData.append('dto', dto)
       const config = {

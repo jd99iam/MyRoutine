@@ -5,10 +5,12 @@ import com.example.healthyclub.entity.RoutineEntity;
 import com.example.healthyclub.service.RoutineService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 
 import java.util.List;
@@ -21,16 +23,31 @@ public class RoutineController {
     private final RoutineService routineService;
 
 
-    //루틴 생성
-    @PostMapping("/routine/{userId}")
-    public ResponseEntity<RoutineDTO> create(@RequestBody RoutineDTO routineDTO, @PathVariable Long userId, @AuthenticationPrincipal String tokenId){
+//    //루틴 생성
+//    @PostMapping("/routine/{userId}")
+//    public ResponseEntity<RoutineDTO> create(@RequestBody RoutineDTO routineDTO, @PathVariable Long userId, @AuthenticationPrincipal String tokenId){
+//
+//        //TokenProvider에 setSubject에 인자로 전달할 때 인증을 위해 사용할 필드를 무조건 String 형으로 바꿔서 전달해야함
+//        //@AutehnticationPrincipal로 토큰을 받을 때도 String 형으로 받음
+//        //create를 호출할 때 Long 형으로 변환해서 인자로 전달함
+//
+//        //서비스를 이용해 루틴 엔티티 생성 (dto 전달 -> 엔티티 생성 , DB 저장 -> dto 반환)
+//        RoutineDTO created = routineService.create(routineDTO, userId, Long.parseLong(tokenId));
+//
+//        //응답코드와 함께 반환
+//        return ResponseEntity.status(HttpStatus.OK).body(created);
+//    }
+
+    //루틴 생성, 이미지 포함
+    @PostMapping(value="/routine/{userId}",consumes={MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<RoutineDTO> create(@RequestPart RoutineDTO routineDTO, @RequestPart(value = "image", required = false) MultipartFile image, @PathVariable Long userId, @AuthenticationPrincipal String tokenId){
 
         //TokenProvider에 setSubject에 인자로 전달할 때 인증을 위해 사용할 필드를 무조건 String 형으로 바꿔서 전달해야함
         //@AutehnticationPrincipal로 토큰을 받을 때도 String 형으로 받음
         //create를 호출할 때 Long 형으로 변환해서 인자로 전달함
 
         //서비스를 이용해 루틴 엔티티 생성 (dto 전달 -> 엔티티 생성 , DB 저장 -> dto 반환)
-        RoutineDTO created = routineService.create(routineDTO, userId, Long.parseLong(tokenId));
+        RoutineDTO created = routineService.create(routineDTO, image, userId, Long.parseLong(tokenId));
 
         //응답코드와 함께 반환
         return ResponseEntity.status(HttpStatus.OK).body(created);

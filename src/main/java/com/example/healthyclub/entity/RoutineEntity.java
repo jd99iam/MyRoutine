@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -34,6 +35,11 @@ public class RoutineEntity {
     @Column
     private String routine;
 
+    //루틴 사진
+    @Column
+    @Nullable
+    private String image;
+
     //유저 엔티티와 루틴 dto로 루틴 엔티티 생성
     public static RoutineEntity toEntity(RoutineDTO routineDTO, UserEntity userEntity){
         if (routineDTO.getId()!=null){
@@ -44,7 +50,8 @@ public class RoutineEntity {
                 routineDTO.getId(),
                 userEntity,
                 routineDTO.getDate(),
-                routineDTO.getRoutine()
+                routineDTO.getRoutine(),
+                null
         );
     }
 

@@ -5,14 +5,20 @@ import com.example.healthyclub.entity.RoutineEntity;
 import com.example.healthyclub.entity.UserEntity;
 import com.example.healthyclub.repository.RoutineRepository;
 import com.example.healthyclub.repository.UserRepository;
+import com.example.healthyclub.util.FileUploadUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
-
+import java.io.IOException;
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -21,9 +27,12 @@ public class RoutineService {
     private final RoutineRepository routineRepository;
     private final UserRepository userRepository;
 
+    @Value("${upload.path.routine}")
+    private String uploadRootPath;
+
     //Create
     @Transactional
-    public RoutineDTO create(RoutineDTO routineDTO,Long userId,Long tokenId){
+    public RoutineDTO create(RoutineDTO routineDTO, MultipartFile image,Long userId, Long tokenId){
 
         log.info("userId : "+userId+" tokenId : "+tokenId);
 
@@ -43,6 +52,33 @@ public class RoutineService {
 
         //루틴 엔티티 생성
         RoutineEntity target = RoutineEntity.toEntity(routineDTO,targetUser);
+
+        //이미지 관련
+        try {
+            if(image != null){
+                log.info("image : {}",image.getOriginalFilename());
+
+                //1.서버에 이미지파일을 저장, 이미지를 서버에 업로드
+                //1-a.파일 저장 위치를 지정하여 파일 객체에 포장
+                String originalFilename = image.getOriginalFilename();
+                //1-a-1.파일명이 중복되지 않도록 변경
+                String uploadFileName = UUID.randomUUID() + "_" + originalFilename;
+                //1-a-2.압럳, 폴더를 날짜별로 생성
+                String newUploadPath = FileUploadUtil.makeUploadDirectory(uploadRootPath);
+                File uploadFile = new File(newUploadPath + File.separator + uploadFileName);
+                //1-b. 파일을 해당 경로에 업로드
+                image.transferTo(uploadFile);
+
+                String savePath
+                        = newUploadPath.substring(uploadRootPath.length());
+
+                // 이미지 처리 해주고 나서 엔티티에 setImage로 저장
+                target.setImage(savePath + File.separator + uploadFileName);
+                }
+
+            } catch(IOException e){
+                System.out.println(e);
+            }
 
         //루틴 엔티티 DB에 저장
         RoutineEntity created = routineRepository.save(target);
