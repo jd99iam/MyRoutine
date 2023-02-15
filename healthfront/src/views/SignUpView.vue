@@ -291,7 +291,7 @@ export default {
           'Content-Type': 'multipart/form-data'
         }
       }
-      console.log(profileImgs)
+
       axios // axios로 post 요청보냄
         .post('http://localhost:8081/auth/join', userFormData, config)
         .then((res) => {

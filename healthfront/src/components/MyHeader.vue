@@ -38,6 +38,7 @@
               >
             </li>
           </ul>
+          <img :src="profileImg" style="width:80px;height:80px;border-radius: 50%;" alt="profileImg입니다" />
           <!-- dropdown -->
           <span class="navbar-text" style="margin-right: 200px">
             <div class="dropdown">
@@ -90,7 +91,6 @@
         </div>
       </div>
     </nav>
-    <img :src="profileImg" alt="profileImg입니다" />
 
     <br />
   </div>
