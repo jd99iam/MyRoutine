@@ -6,7 +6,9 @@
           class="card"
           style="width: 18rem; margin-left: 60px; border: 3px solid black"
         >
-          <img src="@/assets/malwang.png" class="card-img-top" alt="..." />
+        <img v-if="this.$store.state.loginStore.token !== null && profileImg !==null" :src="profileImg"  alt="profileImg입니다" />
+        <img v-else-if="profileImg ===null && this.$store.state.loginStore.token !== null" src="../assets/basic.png"  alt="" />
+
           <div class="card-body">
             <h5
               class="card-title text-center"
@@ -179,7 +181,8 @@ export default {
       userHeight: null,
       userWeight: null,
       userExerciseType: [],
-      selectedDate: null
+      selectedDate: null,
+      profileImg: null
     }
   },
   setup() {},
@@ -188,9 +191,28 @@ export default {
     this.getDateString()
     this.showRoutine()
     this.getUserInformation()
+    this.getImg()
   },
   unmounted() {},
   methods: {
+    getImg() {
+      const config = {
+        headers: {
+          Authorization: 'Bearer ' + this.$store.state.loginStore.token,
+          ContentType: 'application/json'
+        },
+        responseType: 'blob' // 이거 있어야함
+      }
+      axios
+        .get('http://localhost:8081/auth/load-profile', config)
+        .then((res) => {
+          if (res.status === 200) {
+            const url = URL.createObjectURL(res.data)
+            console.log(url)
+            this.profileImg = url
+          }
+        })
+    },
     checkDateDistance(d11, d22) {
       const d1 = new Date(d11)
       const d2 = new Date(d22)
