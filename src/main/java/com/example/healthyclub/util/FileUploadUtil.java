@@ -50,7 +50,7 @@ public class FileUploadUtil {
                 return MediaType.IMAGE_PNG;
             case "GIF":
                 return MediaType.IMAGE_GIF;
-            case "JPG": case "JPEG":
+            case "JPG": case "JPEG" : case "JFIF":
                 return MediaType.IMAGE_JPEG;
             default:
                 return null;

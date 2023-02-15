@@ -38,7 +38,8 @@
               >
             </li>
           </ul>
-          <img :src="profileImg" style="width:80px;height:80px;border-radius: 50%;" alt="profileImg입니다" />
+          <img v-if="this.$store.state.loginStore.token !== null && profileImg !==null" :src="profileImg" style="width:70px;height:70px;border-radius: 50%;" alt="profileImg입니다" />
+          <img v-else-if="profileImg ===null && this.$store.state.loginStore.token !== null" src="../assets/basic.png" style="width:70px;height:70px;border-radius: 50%;" alt="" />
           <!-- dropdown -->
           <span class="navbar-text" style="margin-right: 200px">
             <div class="dropdown">
