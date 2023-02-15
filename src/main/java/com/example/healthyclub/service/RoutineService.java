@@ -1,6 +1,7 @@
 package com.example.healthyclub.service;
 
 import com.example.healthyclub.dto.RoutineDTO;
+import com.example.healthyclub.dto.RoutineResponseDTO;
 import com.example.healthyclub.entity.RoutineEntity;
 import com.example.healthyclub.entity.UserEntity;
 import com.example.healthyclub.repository.RoutineRepository;
@@ -110,11 +111,11 @@ public class RoutineService {
     }
 
     //유저 아이디를 받아서 해당 유저의 루틴들을 List<RoutineDTO> 형태로 반환
-    public List<RoutineDTO> showAll(Long userId) {
+    public List<RoutineResponseDTO> showAll(Long userId) {
 
         return routineRepository.findByUserId(userId)
                 .stream()
-                .map(routine->RoutineDTO.toDTO(routine))
+                .map(routine-> RoutineResponseDTO.toDTO(routine))
                 .collect(Collectors.toList());
     }
 

@@ -20,6 +20,8 @@ public class RoutineDTO {
 
     private String routine;
 
+
+
     //엔티티를 DTO로 변환하는 메소드
     public static RoutineDTO toDTO(RoutineEntity routineEntity) {
         return new RoutineDTO(
@@ -29,4 +31,5 @@ public class RoutineDTO {
                 routineEntity.getRoutine()
         );
     }
+
 }

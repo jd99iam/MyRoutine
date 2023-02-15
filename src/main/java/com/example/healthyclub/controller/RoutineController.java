@@ -1,18 +1,23 @@
 package com.example.healthyclub.controller;
 
 import com.example.healthyclub.dto.RoutineDTO;
+import com.example.healthyclub.dto.RoutineResponseDTO;
 import com.example.healthyclub.entity.RoutineEntity;
 import com.example.healthyclub.service.RoutineService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.parameters.P;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -70,10 +75,10 @@ public class RoutineController {
 
     //루틴 읽어오기 (유저의 모든 루틴을 읽어옴) - 루틴 읽어오기는 꼭 내 루틴만 읽어오는 것이 아님. 따라서 로그인만 하면 가능
     @GetMapping("/routine/{userId}")
-    public ResponseEntity<List<RoutineDTO>> readAll(@PathVariable Long userId){
+    public ResponseEntity<List<RoutineResponseDTO>> readAll(@PathVariable Long userId){
 
         //서비스를 이용해 리스트 받아옴
-        List<RoutineDTO> routineDTOS = routineService.showAll(userId);
+        List<RoutineResponseDTO> routineDTOS = routineService.showAll(userId);
 
         return ResponseEntity.status(HttpStatus.OK).body(routineDTOS);
     }

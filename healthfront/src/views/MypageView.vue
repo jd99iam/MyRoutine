@@ -6,8 +6,20 @@
           class="card"
           style="width: 18rem; margin-left: 60px; border: 3px solid black"
         >
-        <img v-if="this.$store.state.loginStore.token !== null && profileImg !==null" :src="profileImg"  alt="profileImg입니다" />
-        <img v-else-if="profileImg ===null && this.$store.state.loginStore.token !== null" src="../assets/basic.png"  alt="" />
+          <img
+            v-if="
+              this.$store.state.loginStore.token !== null && profileImg !== null
+            "
+            :src="profileImg"
+            alt="profileImg입니다"
+          />
+          <img
+            v-else-if="
+              profileImg === null && this.$store.state.loginStore.token !== null
+            "
+            src="../assets/basic.png"
+            alt=""
+          />
 
           <div class="card-body">
             <h5
@@ -131,7 +143,11 @@
                   >
                 </div>
                 <br />
-                {{ routine.routine }}
+                {{ routine.routine }}<br />
+                이미지 : {{ routine.image }}
+                <span v-if="routine.image === null">이미지가 null입니다</span>
+                <br />
+                <img alt="루틴 이미지" :src="routine.image" />
                 <br /><br />
 
                 <span>
@@ -263,12 +279,15 @@ export default {
         const config = {
           headers: {
             Authorization: 'Bearer ' + this.$store.state.loginStore.token
+            // ContentType: 'application/json'
           }
+          // responseType: 'blob' // 이거 있어야함
         }
         axios
           .get('http://localhost:8081/routine/' + userPK, config)
           .then((res) => {
             vm.routines = res.data
+            vm.routines.image = URL.createObjectURL(vm.routines.image)
           })
       }
     },
