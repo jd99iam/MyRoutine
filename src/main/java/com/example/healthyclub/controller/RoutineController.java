@@ -73,12 +73,22 @@ public class RoutineController {
 //        return ResponseEntity.status(HttpStatus.OK).body(created);
 //    }
 
+//    //루틴 읽어오기 (유저의 모든 루틴을 읽어옴) : 이미지 포함 - 루틴 읽어오기는 꼭 내 루틴만 읽어오는 것이 아님. 따라서 로그인만 하면 가능
+//    @GetMapping("/routine/{userId}")
+//    public ResponseEntity<List<RoutineResponseDTO>> readAll(@PathVariable Long userId){
+//
+//        //서비스를 이용해 리스트 받아옴
+//        List<RoutineResponseDTO> routineDTOS = routineService.showAll(userId);
+//
+//        return ResponseEntity.status(HttpStatus.OK).body(routineDTOS);
+//    }
+
     //루틴 읽어오기 (유저의 모든 루틴을 읽어옴) - 루틴 읽어오기는 꼭 내 루틴만 읽어오는 것이 아님. 따라서 로그인만 하면 가능
     @GetMapping("/routine/{userId}")
-    public ResponseEntity<List<RoutineResponseDTO>> readAll(@PathVariable Long userId){
+    public ResponseEntity<List<RoutineDTO>> readAll(@PathVariable Long userId){
 
         //서비스를 이용해 리스트 받아옴
-        List<RoutineResponseDTO> routineDTOS = routineService.showAll(userId);
+        List<RoutineDTO> routineDTOS = routineService.showAll(userId);
 
         return ResponseEntity.status(HttpStatus.OK).body(routineDTOS);
     }

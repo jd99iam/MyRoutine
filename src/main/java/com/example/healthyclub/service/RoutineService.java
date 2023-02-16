@@ -110,12 +110,21 @@ public class RoutineService {
         return RoutineDTO.toDTO(created);
     }
 
+//    //유저 아이디를 받아서 해당 유저의 루틴들을 List<RoutineDTO> 형태로 반환 ---- 이미지 responseDTO
+//    public List<RoutineResponseDTO> showAll(Long userId) {
+//
+//        return routineRepository.findByUserId(userId)
+//                .stream()
+//                .map(routine-> RoutineResponseDTO.toDTO(routine))
+//                .collect(Collectors.toList());
+//    }
+
     //유저 아이디를 받아서 해당 유저의 루틴들을 List<RoutineDTO> 형태로 반환
-    public List<RoutineResponseDTO> showAll(Long userId) {
+    public List<RoutineDTO> showAll(Long userId) {
 
         return routineRepository.findByUserId(userId)
                 .stream()
-                .map(routine-> RoutineResponseDTO.toDTO(routine))
+                .map(routine-> RoutineDTO.toDTO(routine))
                 .collect(Collectors.toList());
     }
 
