@@ -10,7 +10,10 @@ import com.example.healthyclub.util.FileUploadUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
@@ -30,6 +33,18 @@ public class RoutineService {
 
     @Value("${upload.path.routine}")
     private String uploadRootPath;
+
+    //루틴 이미지 반환하기 위한 서비스 메소드
+    public String getRoutineImage(Long routineId){
+
+        //DB에서 id에 해당하는 루틴을 찾아서 루틴의 이미지 컬럼값을 반환함
+        RoutineEntity target = routineRepository.findById(routineId)
+                .orElseThrow(()->new IllegalArgumentException("RoutineService : 루틴을 찾을 수 없습니다"));
+        
+        String routineImage = target.getImage();
+        
+        return routineImage;
+    }
 
     //Create
     @Transactional

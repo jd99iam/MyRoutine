@@ -87,7 +87,7 @@
             </tr>
             <tr v-for="(routine, i) in routines" :key="i">
               <td v-if="checkDateDistance(selectedDate, routine.date)">
-                <div id="carouselExample" class="carousel slide">
+                <!-- <div id="carouselExample" class="carousel slide">
                   <div class="carousel-inner">
                     <div class="carousel-item active">
                       <img
@@ -135,7 +135,7 @@
                     ></span>
                     <span class="visually-hidden">Next</span>
                   </button>
-                </div>
+                </div> -->
                 <hr />
                 <div class="row text-end" style="margin-right: 10px">
                   <span style="font-size: 20px">
@@ -147,7 +147,11 @@
                 이미지 : {{ routine.image }}
                 <span v-if="routine.image === null">이미지가 null입니다</span>
                 <br />
-                <img alt="루틴 이미지" :src="routine.image" />
+                <img
+                  v-if="routine.image != null"
+                  alt="루틴 이미지"
+                  :src="routine.image"
+                />
                 <br /><br />
 
                 <span>
@@ -287,7 +291,28 @@ export default {
           .get('http://localhost:8081/routine/' + userPK, config)
           .then((res) => {
             vm.routines = res.data
-            vm.routines.image = URL.createObjectURL(vm.routines.image)
+            const config2 = {
+              headers: {
+                Authorization: 'Bearer ' + this.$store.state.loginStore.token,
+                ContentType: 'application/json'
+              },
+              responseType: 'blob'
+            }
+            vm.routines.forEach((routine) =>
+              axios
+                .get(
+                  'http://localhost:8081/routine/image/' + routine.id,
+                  config2
+                )
+                .then((res) => {
+                  if (res.data != null) {
+                    routine.image = URL.createObjectURL(res.data)
+                    // routine.image = res.data
+                  } else {
+                    routine.image = null
+                  }
+                })
+            )
           })
       }
     },

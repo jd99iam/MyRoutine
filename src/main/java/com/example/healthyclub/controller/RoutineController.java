@@ -4,8 +4,11 @@ import com.example.healthyclub.dto.RoutineDTO;
 import com.example.healthyclub.dto.RoutineResponseDTO;
 import com.example.healthyclub.entity.RoutineEntity;
 import com.example.healthyclub.service.RoutineService;
+import com.example.healthyclub.util.FileUploadUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -23,10 +26,13 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin
+@Slf4j
 public class RoutineController {
 
     private final RoutineService routineService;
 
+    @Value("${upload.path.routine}")
+    private String uploadRootPath;
 
 //    //루틴 생성
 //    @PostMapping("/routine/{userId}")
@@ -136,4 +142,49 @@ public class RoutineController {
 
         return ResponseEntity.status(HttpStatus.OK).body(copied);
     }
+
+    //루틴 이미지 표시하기 위함
+    @GetMapping("/routine/image/{routineId}")
+    public ResponseEntity<?> loadImage(@PathVariable Long routineId, @AuthenticationPrincipal String tokenId) throws IOException{
+
+        byte[] rawImageData;
+
+        String image = routineService.getRoutineImage(routineId);
+
+        if (image != null){
+            log.info("루틴아이디 : "+routineId);
+            //ex) C:/profile_upload/2023/...
+            String fullPath = uploadRootPath + File.separator + image;
+            log.info("fullPath : "+fullPath);
+
+
+            //해당 경로를 파일 객체로 포장
+            File targetFile = new File(fullPath);
+
+
+
+            //혹시 해당 파일이 존재하지 않으면 예외가 발생(FileNotFoundException)
+            if(!targetFile.exists()) {
+                log.info("id : "+routineId+"인 루틴은 이미지 targetFile이 존재하지 않음");
+                return ResponseEntity.status(HttpStatus.OK).body(null);
+            }
+            else {
+                log.info("targetfile : {}",targetFile);
+                //파일 데이터를 바이트배열로 포장 (blob 데이터)
+                rawImageData = FileCopyUtils.copyToByteArray(targetFile);
+
+                //응답 헤더 정보 추가
+                HttpHeaders headers = new HttpHeaders();
+                headers.setContentType(FileUploadUtil.getMediaType(image));
+
+                log.info("rawImageData : {}",rawImageData);
+
+                return ResponseEntity.ok().headers(headers).body(rawImageData);
+            }
+
+        } else {
+            return ResponseEntity.status(HttpStatus.OK).body(null);
+        }
+    }
+
 }
