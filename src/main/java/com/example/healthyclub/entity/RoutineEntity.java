@@ -10,6 +10,7 @@ import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -38,7 +39,9 @@ public class RoutineEntity {
     //루틴 사진
     @Column
     @Nullable
-    private String image;
+    @ElementCollection(fetch= FetchType.LAZY)
+    @CollectionTable(name="routine_image")
+    private List<String> image;
 
     //유저 엔티티와 루틴 dto로 루틴 엔티티 생성
     public static RoutineEntity toEntity(RoutineDTO routineDTO, UserEntity userEntity){

@@ -148,9 +148,10 @@
                 <span v-if="routine.image === null">이미지가 null입니다</span>
                 <br />
                 <img
-                  v-if="routine.image != null"
+                  v-for="(image, i) in routine.image"
+                  :key="i"
+                  :src="image"
                   alt="루틴 이미지"
-                  :src="routine.image"
                 />
                 <br /><br />
 
@@ -306,8 +307,10 @@ export default {
                 )
                 .then((res) => {
                   if (res.data != null) {
-                    routine.image = URL.createObjectURL(res.data)
-                    // routine.image = res.data
+                    // res.data.forEach((image) => {
+                    //   routine.image.push(URL.createObjectURL(image))
+                    // })
+                    console.log('res.data = ' + res.data)
                   } else {
                     routine.image = null
                   }

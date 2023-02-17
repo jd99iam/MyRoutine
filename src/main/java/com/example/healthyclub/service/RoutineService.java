@@ -1,7 +1,6 @@
 package com.example.healthyclub.service;
 
 import com.example.healthyclub.dto.RoutineDTO;
-import com.example.healthyclub.dto.RoutineResponseDTO;
 import com.example.healthyclub.entity.RoutineEntity;
 import com.example.healthyclub.entity.UserEntity;
 import com.example.healthyclub.repository.RoutineRepository;
@@ -10,19 +9,17 @@ import com.example.healthyclub.util.FileUploadUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import java.io.IOException;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -35,20 +32,20 @@ public class RoutineService {
     private String uploadRootPath;
 
     //루틴 이미지 반환하기 위한 서비스 메소드
-    public String getRoutineImage(Long routineId){
+    public List<String> getRoutineImage(Long routineId){
 
         //DB에서 id에 해당하는 루틴을 찾아서 루틴의 이미지 컬럼값을 반환함
         RoutineEntity target = routineRepository.findById(routineId)
                 .orElseThrow(()->new IllegalArgumentException("RoutineService : 루틴을 찾을 수 없습니다"));
         
-        String routineImage = target.getImage();
+        List<String> routineImage = target.getImage();
         
         return routineImage;
     }
 
     //Create
     @Transactional
-    public RoutineDTO create(RoutineDTO routineDTO, MultipartFile image,Long userId, Long tokenId){
+    public RoutineDTO create(RoutineDTO routineDTO, List<MultipartFile> images,Long userId, Long tokenId){
 
         log.info("userId : "+userId+" tokenId : "+tokenId);
 
@@ -71,25 +68,24 @@ public class RoutineService {
 
         //이미지 관련
         try {
-            if(image != null){
-                log.info("image : {}",image.getOriginalFilename());
+            if(images != null){
+                // log.info("image : {}",image.getOriginalFilename());
 
-                //1.서버에 이미지파일을 저장, 이미지를 서버에 업로드
-                //1-a.파일 저장 위치를 지정하여 파일 객체에 포장
-                String originalFilename = image.getOriginalFilename();
-                //1-a-1.파일명이 중복되지 않도록 변경
-                String uploadFileName = UUID.randomUUID() + "_" + originalFilename;
-                //1-a-2.압럳, 폴더를 날짜별로 생성
-                String newUploadPath = FileUploadUtil.makeUploadDirectory(uploadRootPath);
-                File uploadFile = new File(newUploadPath + File.separator + uploadFileName);
-                //1-b. 파일을 해당 경로에 업로드
-                image.transferTo(uploadFile);
+                List<String> imageList = new ArrayList<>();
 
-                String savePath
-                        = newUploadPath.substring(uploadRootPath.length());
 
-                // 이미지 처리 해주고 나서 엔티티에 setImage로 저장
-                target.setImage(savePath + File.separator + uploadFileName);
+                for (MultipartFile multipartFile : images){
+                    String originalFilename = multipartFile.getOriginalFilename();
+                    String uploadFileName = UUID.randomUUID() + "_" + originalFilename;
+                    String newUploadPath = FileUploadUtil.makeUploadDirectory(uploadRootPath);
+                    File uploadFile = new File(newUploadPath + File.separator + uploadFileName);
+                    multipartFile.transferTo(uploadFile);
+                    String savePath
+                            = newUploadPath.substring(uploadRootPath.length());
+                    imageList.add(savePath + File.separator + uploadFileName);
+                }
+
+                target.setImage(imageList);
                 }
 
             } catch(IOException e){

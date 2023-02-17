@@ -1,8 +1,6 @@
 package com.example.healthyclub.controller;
 
 import com.example.healthyclub.dto.RoutineDTO;
-import com.example.healthyclub.dto.RoutineResponseDTO;
-import com.example.healthyclub.entity.RoutineEntity;
 import com.example.healthyclub.service.RoutineService;
 import com.example.healthyclub.util.FileUploadUtil;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.parameters.P;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -51,7 +49,7 @@ public class RoutineController {
 
     //루틴 생성, 이미지 포함
     @PostMapping(value="/routine/{userId}",consumes={MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<RoutineDTO> create(@RequestPart RoutineDTO routineDTO, @RequestPart(value = "image", required = false) MultipartFile image, @PathVariable Long userId, @AuthenticationPrincipal String tokenId){
+    public ResponseEntity<RoutineDTO> create(@RequestPart RoutineDTO routineDTO, @RequestPart(value = "image", required = false) List<MultipartFile> image, @PathVariable Long userId, @AuthenticationPrincipal String tokenId){
 
         //TokenProvider에 setSubject에 인자로 전달할 때 인증을 위해 사용할 필드를 무조건 String 형으로 바꿔서 전달해야함
         //@AutehnticationPrincipal로 토큰을 받을 때도 String 형으로 받음
@@ -147,40 +145,28 @@ public class RoutineController {
     @GetMapping("/routine/image/{routineId}")
     public ResponseEntity<?> loadImage(@PathVariable Long routineId, @AuthenticationPrincipal String tokenId) throws IOException{
 
-        byte[] rawImageData;
+        List<byte[]> rawImageData = new ArrayList<>();
 
-        String image = routineService.getRoutineImage(routineId);
+        List<String> images = routineService.getRoutineImage(routineId);
 
-        if (image != null){
-            log.info("루틴아이디 : "+routineId);
-            //ex) C:/profile_upload/2023/...
-            String fullPath = uploadRootPath + File.separator + image;
-            log.info("fullPath : "+fullPath);
+        HttpHeaders headers = new HttpHeaders();
 
 
-            //해당 경로를 파일 객체로 포장
-            File targetFile = new File(fullPath);
+        if (images != null){
 
-
-
-            //혹시 해당 파일이 존재하지 않으면 예외가 발생(FileNotFoundException)
-            if(!targetFile.exists()) {
-                log.info("id : "+routineId+"인 루틴은 이미지 targetFile이 존재하지 않음");
-                return ResponseEntity.status(HttpStatus.OK).body(null);
-            }
-            else {
-                log.info("targetfile : {}",targetFile);
-                //파일 데이터를 바이트배열로 포장 (blob 데이터)
-                rawImageData = FileCopyUtils.copyToByteArray(targetFile);
-
-                //응답 헤더 정보 추가
-                HttpHeaders headers = new HttpHeaders();
+            for (String image : images){
                 headers.setContentType(FileUploadUtil.getMediaType(image));
-
-                log.info("rawImageData : {}",rawImageData);
-
-                return ResponseEntity.ok().headers(headers).body(rawImageData);
+                String fullPath = uploadRootPath + File.separator + image;
+                File targetFile = new File(fullPath);
+                if(!targetFile.exists()) {
+                    log.info( "id : "+routineId+"인 루틴은 이미지 targetFile이 존재하지 않음");
+                    return ResponseEntity.status(HttpStatus.OK).body(null);
+                }else{
+                    rawImageData.add(FileCopyUtils.copyToByteArray(targetFile));
+                }
             }
+
+            return ResponseEntity.ok().headers(headers).body(rawImageData);
 
         } else {
             return ResponseEntity.status(HttpStatus.OK).body(null);

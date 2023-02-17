@@ -3,6 +3,7 @@
     이미지 업로드 테스트 페이지입니다
     <hr />
     <input multiple @change="imageUpload()" ref="images" type="file" />
+    {{ image }}
   </div>
 </template>
 <script>

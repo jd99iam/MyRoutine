@@ -5,8 +5,11 @@
     <label for="exampleInputEmail1" class="form-label">루틴</label>
     <input class="form-control" v-model="content" />
     <label for="exampleInputEmail1" class="form-label">이미지</label>
-    <input type="file" ref="image" @change="upload" />
-    <img :src="imageUploaded" alt="올린 이미지" /> <br />
+    <input multiple type="file" ref="image" @change="upload" />
+    <img v-for="(image, i) in imageUploaded" :key="i" :src="image" />
+    <!-- <img :src="imageUploaded" alt="올린 이미지" /> <br /> -->
+
+    <br />
     <button @click="submitPost">생성 완료</button>
     <br />
     테스트 <br />
@@ -22,8 +25,8 @@ export default {
     return {
       date: null,
       content: null,
-      image: null,
-      imageUploaded: null
+      image: [],
+      imageUploaded: []
     }
   },
   setup() {},
@@ -32,10 +35,19 @@ export default {
   unmounted() {},
   methods: {
     upload() {
-      this.image = this.$refs.image.files[0] // 사용자가 올린 이미지
+      // 수정 전
+      // this.image = this.$refs.image.files[0] // 사용자가 올린 이미지
+      // console.log(this.image)
+      // // URL.createObjectURL로 사용자가 올린 이미지를 URL로 만들어서 화면에 표시할 수 있게 한다. img 태그의 src값에 바인딩해준다
+      // this.imageUploaded = URL.createObjectURL(this.image)
+
+      const imageArray = this.$refs.image.files
+      for (var i = 0; i < imageArray.length; i++) {
+        this.image.push(imageArray[i])
+        this.imageUploaded.push(URL.createObjectURL(this.image[i]))
+        console.log(this.image[i])
+      }
       console.log(this.image)
-      // URL.createObjectURL로 사용자가 올린 이미지를 URL로 만들어서 화면에 표시할 수 있게 한다. img 태그의 src값에 바인딩해준다
-      this.imageUploaded = URL.createObjectURL(this.image)
     },
     submitPost() {
       // 원래 있던 dto랑 이미지를 UserFormData에 넣어서 axios로 보내야함
