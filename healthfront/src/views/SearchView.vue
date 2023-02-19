@@ -42,6 +42,7 @@
       <th scope="col">나이</th>
       <th scope="col">식별번호</th>
       <th scope="col">친구여부</th>
+      <th scope="col">팔로워 수</th>
     </tr>
   </thead>
   <tbody>
@@ -52,13 +53,14 @@
       <td>{{ lists.id }}</td>
       <td>
         <span v-if="lists.id === this.$store.state.loginStore.id">
-          <button type="button" class="btn btn-light" disabled>본인입니다</button>
+          <button type="button" class="btn btn-warning" disabled>본인입니다</button>
         </span>
         <span v-else-if="lists.id !== this.$store.state.loginStore.id" >
         <button type="button" class="btn btn-light" v-if="lists2.includes(lists.id)" disabled>이미 친구입니다</button>
         <button type="button" class="btn btn-dark" v-else @click="plusFriendMethod(lists.id)">친구 추가</button>
         </span>
       </td>
+      <td>{{ lists.follower }}</td>
     </tr>
 
   </tbody>
@@ -86,6 +88,19 @@ export default {
   },
   unmounted () {},
   methods: {
+    setFollow(idss) {
+      const friendid = idss
+      const config = {
+        headers: {
+          Authorization: 'Bearer ' + this.$store.state.loginStore.token
+        }
+      }
+      axios
+        .get(`http://localhost:8081/friend/countfriends/${friendid}`, config)
+        .then((res) => {
+          this.follow = res.data
+        })
+    },
     show () {
       const token = this.tokens
       const config = {
@@ -96,7 +111,6 @@ export default {
       axios.get('http://localhost:8081/friend/showid', config)
         .then((res) => {
           this.lists2 = res.data
-          console.log(this.lists2)
         })
     },
     plusFriendMethod (id) {
@@ -112,7 +126,6 @@ export default {
         .get(`http://localhost:8081/friend/get/${friendPK}`, config)
         .then((res) => {
           alert('친구가 추가되었습니다.')
-          console.log(res)
           this.message = '추가된 친구입니다.'
           this.lists2.push(friendPK)
         })

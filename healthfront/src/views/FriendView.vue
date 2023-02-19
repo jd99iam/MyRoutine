@@ -2,6 +2,9 @@
   <div>
 <br/>
     <label style="font-size:20px;"><strong>나의 친구 수 = {{ this.value }}</strong></label>
+    <br/>
+    <label style="font-size:20px;"><strong>나를 팔로우한 수 = {{ this.follow }}</strong></label>
+
 <br/>
 <br/>
 <table class="table">
@@ -65,6 +68,7 @@ export default {
   components: {},
   data() {
     return {
+      follow: null,
       routineUserId: null,
       lists: [],
       detailList: [],
@@ -79,9 +83,22 @@ export default {
   mounted() {
     this.showFriends()
     this.setVal()
+    this.setFollow()
   },
   unmounted() {},
   methods: {
+    setFollow() {
+      const config = {
+        headers: {
+          Authorization: 'Bearer ' + this.$store.state.loginStore.token
+        }
+      }
+      axios
+        .get('http://localhost:8081/friend/countfriends', config)
+        .then((res) => {
+          this.follow = res.data
+        })
+    },
     setvalue(id) {
       this.val = id
     },

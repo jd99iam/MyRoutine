@@ -125,7 +125,7 @@ export default {
         .then((res) => {
           if (res.status === 200) {
             const url = URL.createObjectURL(res.data)
-            console.log(url)
+            // console.log(url)
             this.profileImg = url
           }
         })

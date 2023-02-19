@@ -12,4 +12,6 @@ public interface RoutineRepository extends JpaRepository<RoutineEntity,Long> {
     @Query(value = "SELECT * FROM routine WHERE user_id = :userId", nativeQuery = true)
     List<RoutineEntity> findByUserId(Long userId);
 
+    @Query(value = "SELECT image FROM routine WHERE user_id = :userId", nativeQuery = true)
+    List<String> findimageByUserId(Long userId);
 }

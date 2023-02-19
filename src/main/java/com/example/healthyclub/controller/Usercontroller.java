@@ -189,6 +189,12 @@ public class Usercontroller {
 
         try{
             List<UserEntity> userByName = service.getUserByName(name);
+            for(UserEntity x : userByName){
+                Long id = x.getId();
+                Integer getmyfollowers = service.getmyfollowers(id.intValue());
+                if (getmyfollowers == null) getmyfollowers = 0;
+                x.setFollower(getmyfollowers);
+            }
             return ResponseEntity.ok().body(userByName);
         }catch(RuntimeException e){
             return ResponseEntity.badRequest().body(new ErrorDTO(e.getMessage()));
@@ -202,6 +208,12 @@ public class Usercontroller {
 
         try{
             List<UserEntity> userByType = service.getUserByType(type);
+            for(UserEntity x : userByType){
+                Long id = x.getId();
+                Integer getmyfollowers = service.getmyfollowers(id.intValue());
+                if (getmyfollowers == null) getmyfollowers = 0;
+                x.setFollower(getmyfollowers);
+            }
             return ResponseEntity.ok().body(userByType);
         }catch(RuntimeException e){
             return ResponseEntity.badRequest().body(new ErrorDTO(e.getMessage()));

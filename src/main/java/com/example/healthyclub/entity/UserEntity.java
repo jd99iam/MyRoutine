@@ -83,6 +83,9 @@ public class UserEntity {
     @Column(name = "update_date")
     private LocalDate updateDate;
 
+    @Column
+    private Integer follower;
+
     public UserEntity(UserRequestDTO dto){
         this.name = dto.getName();
         this.userId = dto.getUserId();

@@ -199,7 +199,13 @@ public class RoutineService {
                 targetUser);
 
         return RoutineDTO.toDTO(routineRepository.save(copied));
+    }
 
+    @Transactional
+    public List<String> getProfileImg(Long id){
+        log.info("id 값 - {}",id);
+        List<String> imagelist = routineRepository.findimageByUserId(id);
+        return imagelist;
     }
 }
 

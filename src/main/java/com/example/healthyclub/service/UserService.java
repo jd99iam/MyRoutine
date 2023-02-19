@@ -90,6 +90,11 @@ public class UserService {
     public List<UserEntity> getUserByName(String name){
         log.info("name - {}",name);
         List<UserEntity> userByName = repository.getUserByName(name);
+//        for (UserEntity x : userByName){
+//            int ids = x.getId().intValue();
+//            int myfollowers = repository.myfollowers(ids);
+//            x.setFollower(myfollowers);
+//        }
         if (userByName.size() == 0) throw new RuntimeException("해당 이름을 가진 회원이 존재하지 않습니다.");
         return userByName;
     }
@@ -109,5 +114,17 @@ public class UserService {
         log.info("id 값 - {}",id);
         String img = repository.profileImg(id);
         return img;
+    }
+
+    @Transactional
+    public int getFriendsCount(int friends){
+        int count = repository.friendsCount(friends);
+        return count;
+    }
+
+    @Transactional
+    public Integer getmyfollowers(int friends){
+        Integer count = repository.myfollowers(friends);
+        return count;
     }
 }

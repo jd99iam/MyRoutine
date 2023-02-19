@@ -3,9 +3,11 @@ package com.example.healthyclub.controller;
 import com.example.healthyclub.entity.UserEntity;
 import com.example.healthyclub.error.ErrorDTO;
 import com.example.healthyclub.repository.UserRepository;
+import com.example.healthyclub.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +24,7 @@ import java.util.List;
 public class FriendController {
 
     private final UserRepository userRepository;
+
 
 
     //친구를 추가하기 @Pathvariable의 id는 내가 친구를 추가하려는 사람의 id, @Auth의 identifyId는 나 자신
@@ -115,5 +118,17 @@ public class FriendController {
         log.info("flag - {}",flag);
         return ResponseEntity.ok().body(flag);
     }
+
+    //로그인되어 있는 나의 팔로워 수
+    @GetMapping("/countfriends")
+    @Transactional
+    public ResponseEntity<?> countFriends(@AuthenticationPrincipal String tokenId){
+        int inttokenId = Integer.parseInt(tokenId);
+        int count = userRepository.friendsCount(inttokenId);
+
+        return ResponseEntity.ok().body(count);
+    }
+
+
 
 }
