@@ -1,6 +1,5 @@
 <template>
   <div>
-
     <div class="row" style="margin-top: 50px">
       <div class="col-4">
         <div
@@ -145,10 +144,10 @@
                 </div>
                 <br />
                 {{ routine.routine }}<br />
-                <!-- 이미지 : {{ routine.image }}
+                이미지 : {{ routine.image }}
                 <span v-if="routine.image === null">이미지가 null입니다</span>
                 <br />
-                <img alt="루틴 이미지" :src="routine.image" /> -->
+
                 <br /><br />
 
                 <span>
