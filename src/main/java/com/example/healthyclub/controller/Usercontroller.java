@@ -17,6 +17,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -42,6 +43,7 @@ public class Usercontroller {
 
     private final UserService service;
     private final TokenProvider provider;
+    private final PasswordEncoder encoder;
 
     @Value("${upload.path}")
     private String uploadRootPath;
@@ -139,30 +141,18 @@ public class Usercontroller {
         }
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity delete(@PathVariable Long id, @AuthenticationPrincipal String Id){
+    @DeleteMapping("/delete/{id}/{pw}")
+    public ResponseEntity delete(@PathVariable String id, @PathVariable String pw, @AuthenticationPrincipal String Id){
+        long longid = Long.parseLong(Id);
+        UserEntity user = service.show(longid);
 
-        if(Id.equals("anonymousUser")){
-            String m = "접근 권한이 없습니다.";
-            return ResponseEntity.badRequest().body(new ErrorDTO(m));
-        }
-
-        Long userId = Long.parseLong(Id);
-        if(!userId.equals(service.show(id).getId())){
-            String m = "접근 권한이 없습니다.";
-            return ResponseEntity.badRequest().body(new ErrorDTO(m));
-        }
-
-        try {
-            UserEntity delete = service.delete(id);
-            UserResponseDTO dto = new UserResponseDTO(delete);
-
-            log.info("@AuthenticationPrincipal String userId : {}",userId);
-            return ResponseEntity.ok().body(dto);
-        }catch(Exception e){
-            String message = "delete가 잘되지 않았습니다.";
-            return ResponseEntity.badRequest().body(new ErrorDTO(message));
-
+        if(id.equals(user.getUserId()) && encoder.matches(pw,user.getPassword())){
+            UserEntity delete = service.delete(longid);
+            log.info("delete 잘 됨");
+            return ResponseEntity.ok().body(delete);
+        }else{
+            log.info("delete 실패");
+            return ResponseEntity.badRequest().body(new ErrorDTO("아이디나 비번 틀림"));
         }
     }
     //로그인하기

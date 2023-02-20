@@ -66,6 +66,12 @@ const routes = [
     name: 'imageTest',
     component: () =>
       import(/* webpackChunkName: "about" */ '../views/ImageTestView.vue')
+  },
+  {
+    path: '/joinout',
+    name: 'joinout',
+    component: () =>
+      import(/* webpackChunkName: "about" */ '../views/JoinOut.vue')
   }
 ]
 

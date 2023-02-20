@@ -84,7 +84,7 @@
                   >
                 </li>
                 <li v-if="this.$store.state.loginStore.isLogin">
-                  <a class="dropdown-item" href="#">회원탈퇴</a>
+                  <a class="dropdown-item" href="#" @:click="joinout">회원탈퇴</a>
                 </li>
               </ul>
             </div>
@@ -112,6 +112,11 @@ export default {
   },
   unmounted() {},
   methods: {
+    joinout() {
+      if (confirm('정말 회원 탈퇴를 하시겠습니까?')) {
+        location.href = '/joinout'
+      }
+    },
     getImg() {
       const config = {
         headers: {
