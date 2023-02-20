@@ -93,7 +93,8 @@ export default {
       axios
         .delete('http://localhost:8081/auth/delete/' + id + '/' + pw, config)
         .then((res) => {
-          console.log(res)
+          this.$store.commit('logout')
+          this.$store.state.loginStore.token = null
           alert('회원탈퇴가 정상적으로 이루어졌습니다.')
           location.href = '/'
         })

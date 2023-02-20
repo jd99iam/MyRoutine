@@ -84,6 +84,11 @@
                   >
                 </li>
                 <li v-if="this.$store.state.loginStore.isLogin">
+                  <a class="dropdown-item" href="#" @:click="change"
+                    >회원 정보 변경하기</a
+                  >
+                </li>
+                <li v-if="this.$store.state.loginStore.isLogin">
                   <a class="dropdown-item" href="#" @:click="joinout">회원탈퇴</a>
                 </li>
               </ul>
@@ -112,6 +117,11 @@ export default {
   },
   unmounted() {},
   methods: {
+    change() {
+      if (confirm('회원 정보를 변경하시겠습니까?')) {
+        location.href = '/change'
+      }
+    },
     joinout() {
       if (confirm('정말 회원 탈퇴를 하시겠습니까?')) {
         location.href = '/joinout'

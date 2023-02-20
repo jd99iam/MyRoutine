@@ -72,6 +72,12 @@ const routes = [
     name: 'joinout',
     component: () =>
       import(/* webpackChunkName: "about" */ '../views/JoinOut.vue')
+  },
+  {
+    path: '/change',
+    name: 'change',
+    component: () =>
+      import(/* webpackChunkName: "about" */ '../views/ChangeUserView.vue')
   }
 ]
 
