@@ -110,11 +110,11 @@ public class RoutineController {
     }
 
     //루틴 수정
-    @PatchMapping("/routine/{userId}/{routineId}")
-    public ResponseEntity<RoutineDTO> update(@RequestBody RoutineDTO routineDTO, @PathVariable Long userId, @PathVariable Long routineId, @AuthenticationPrincipal String tokenId){
+    @PatchMapping(value="/routine/{userId}/{routineId}",consumes={MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<RoutineDTO> update(@RequestPart RoutineDTO routineDTO, @PathVariable Long userId, @RequestPart(value = "image", required = false) MultipartFile image,@PathVariable Long routineId, @AuthenticationPrincipal String tokenId){
 
         //서비스에게 위임해서 수정
-        RoutineDTO updated = routineService.update(routineDTO,userId,routineId,Long.parseLong(tokenId));
+        RoutineDTO updated = routineService.update(routineDTO,image,userId,routineId,Long.parseLong(tokenId));
 
         return ResponseEntity.status(HttpStatus.OK).body(updated);
     }

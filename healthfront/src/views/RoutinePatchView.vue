@@ -79,13 +79,16 @@ export default {
   data() {
     return {
       date: null,
-      content: null
+      content: null,
+      imageUploaded: null,
+      image: null
     }
   },
   setup() {},
   created() {},
   mounted() {
     this.getRoutine()
+    this.getImage()
   },
   unmounted() {},
   methods: {
@@ -105,22 +108,66 @@ export default {
           vm.content = res.data.routine
         })
     },
-    submitPatch() {
-      const vm = this
-      const userPK = this.$store.state.loginStore.id
+    getImage() {
       const rid = this.$store.state.routineStore.routineId
+      var vm = this
       const config = {
         headers: {
-          Authorization: 'Bearer ' + this.$store.state.loginStore.token
+          Authorization: 'Bearer ' + this.$store.state.loginStore.token,
+          ContentType: 'application/json'
+        },
+        responseType: 'blob'
+      }
+      axios
+        .get('http://localhost:8081/routine/image/' + rid, config)
+        .then((res) => {
+          if (res.data != null) {
+            vm.imageUploaded = URL.createObjectURL(res.data)
+          }
+        })
+    },
+    upload() {
+      this.image = this.$refs.image.files[0] // 사용자가 올린 이미지
+      console.log(this.image)
+      // URL.createObjectURL로 사용자가 올린 이미지를 URL로 만들어서 화면에 표시할 수 있게 한다. img 태그의 src값에 바인딩해준다
+      this.imageUploaded = URL.createObjectURL(this.image)
+    },
+    submitPatch() {
+      // const vm = this
+      const userPK = this.$store.state.loginStore.id
+      const rid = this.$store.state.routineStore.routineId
+      // const config = {
+      //   headers: {
+      //     Authorization: 'Bearer ' + this.$store.state.loginStore.token
+      //   }
+      // }
+
+      const dto = {
+        date: this.date,
+        routine: this.content
+      }
+      // 먼저 dto를 blob으로 바꿈
+      const dtoToBlob = new Blob([JSON.stringify(dto)], {
+        type: 'application/json'
+      })
+
+      // FormData를 만듬
+      var formData = new FormData()
+
+      // blob으로 바꾼 dto랑 사용자가 입력한 이미지 formData에 append함
+      formData.append('routineDTO', dtoToBlob)
+      formData.append('image', this.image)
+
+      const config = {
+        headers: {
+          Authorization: 'Bearer ' + this.$store.state.loginStore.token,
+          'Content-Type': 'multipart/form-data' // 컨텐츠 타입 지정해줘야함
         }
       }
       axios
         .patch(
           'http://localhost:8081/routine/' + userPK + '/' + rid,
-          {
-            date: vm.date,
-            routine: vm.content
-          },
+          formData,
           config
         )
         .then((res) => {
