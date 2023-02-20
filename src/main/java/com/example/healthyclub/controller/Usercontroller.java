@@ -145,7 +145,7 @@ public class Usercontroller {
     }
 
     @DeleteMapping("/delete/{id}/{pw}")
-    public ResponseEntity delete(@PathVariable String id, @PathVariable String pw, @AuthenticationPrincipal String Id){
+    public ResponseEntity<?> delete(@PathVariable String id, @PathVariable String pw, @AuthenticationPrincipal String Id){
         long longid = Long.parseLong(Id);
         UserEntity user = service.show(longid);
 
@@ -155,9 +155,11 @@ public class Usercontroller {
             routineService.deleteAll(longid);
 
 
-            UserEntity delete = service.delete(longid);
+            // UserEntity delete = service.delete(longid);
+            service.delete(longid);
+
             log.info("delete 잘 됨");
-            return ResponseEntity.ok().body(delete);
+            return ResponseEntity.ok().body(null);
         }else{
             log.info("delete 실패");
             return ResponseEntity.badRequest().body(new ErrorDTO("아이디나 비번 틀림"));
