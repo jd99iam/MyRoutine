@@ -143,6 +143,14 @@ public class RoutineService {
                 .collect(Collectors.toList());
     }
 
+    //유저의 모든 루틴 삭제
+    public void deleteAll(Long userId){
+        List<RoutineEntity> targets = routineRepository.findByUserId(userId);
+        for (RoutineEntity routine : targets){
+            routineRepository.delete(routine);
+        }
+    }
+
 
     //유저 아이디랑 루틴 아이디를 받아서 해당 유저의 해당 루틴을 RoutineDTO 형태로 반환
     public RoutineDTO show(Long userId, Long routineId) {

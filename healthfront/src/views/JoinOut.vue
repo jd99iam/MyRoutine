@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <div class="row">
+  <div>
+    <div class="row">
       <div class="col-4"></div>
       <div
         class="col-4 text-center"
@@ -46,12 +46,16 @@
           <br />
           <button
             style="position: relative; left: 130px; border: 2px solid black"
-            class="btn btn-primary" @click.prevent="deletes">
+            class="btn btn-primary"
+            @click.prevent="deletes"
+          >
             회원탈퇴하기
           </button>
           <button
             style="position: relative; left: 130px; border: 2px solid black"
-            class="btn btn-primary" @click="deletes2">
+            class="btn btn-primary"
+            @click="deletes2"
+          >
             회원탈퇴하기dfdf
           </button>
           <br />
@@ -59,8 +63,8 @@
       </div>
       <div class="col-4"></div>
     </div>
-    </div>
-  </template>
+  </div>
+</template>
 <script>
 import axios from 'axios'
 export default {
@@ -87,10 +91,10 @@ export default {
         }
       }
       axios
-        .delete(`http://localhost:8081/auth/delete/${id}/${pw}`, config)
+        .delete('http://localhost:8081/auth/delete/' + id + '/' + pw, config)
         .then((res) => {
           console.log(res)
-          alert('회원가입이 정상적으로 이루어졌습니다.')
+          alert('회원탈퇴가 정상적으로 이루어졌습니다.')
           location.href = '/'
         })
     },

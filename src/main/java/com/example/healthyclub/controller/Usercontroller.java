@@ -2,9 +2,11 @@ package com.example.healthyclub.controller;
 
 import com.example.healthyclub.dto.UserRequestDTO;
 import com.example.healthyclub.dto.UserResponseDTO;
+import com.example.healthyclub.entity.RoutineEntity;
 import com.example.healthyclub.entity.UserEntity;
 import com.example.healthyclub.error.ErrorDTO;
 import com.example.healthyclub.jwt.TokenProvider;
+import com.example.healthyclub.service.RoutineService;
 import com.example.healthyclub.service.UserService;
 import com.example.healthyclub.util.FileUploadUtil;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +43,7 @@ import java.util.UUID;
 @RequestMapping("/auth")
 public class Usercontroller {
 
+    private final RoutineService routineService;
     private final UserService service;
     private final TokenProvider provider;
     private final PasswordEncoder encoder;
@@ -147,6 +150,11 @@ public class Usercontroller {
         UserEntity user = service.show(longid);
 
         if(id.equals(user.getUserId()) && encoder.matches(pw,user.getPassword())){
+
+            // 해당 유저의 모든 루틴을 삭제해야함
+            routineService.deleteAll(longid);
+
+
             UserEntity delete = service.delete(longid);
             log.info("delete 잘 됨");
             return ResponseEntity.ok().body(delete);
