@@ -1,13 +1,74 @@
 <template>
   <div>
-    <label for="exampleInputEmail1" class="form-label">날짜</label>
+    <!---->
+    <div class="row">
+      <div class="col">
+        <table class="table table-primary">
+          <thead>
+            <tr>
+              <th>날짜</th>
+              <td><input type="date" v-model="date" /><br /></td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th>루틴</th>
+
+              <td>
+                <textarea
+                  class="form-control"
+                  id="exampleFormControlTextarea1"
+                  rows="10"
+                  v-model="content"
+                ></textarea>
+                <br />
+                <button
+                  class="btn btn-primary"
+                  @click="submitPatch"
+                  style="margin-left: 480px"
+                >
+                  수정완료
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col">
+        <table class="table table-primary">
+          <tbody>
+            <tr style="height: 320px">
+              <td class="text-center">
+                <img :src="imageUploaded" style="height: 300px" />
+                <br />
+              </td>
+            </tr>
+            <tr style="height: 20px">
+              <td>
+                <!-- <label for="formFile" class="form-label">루틴 이미지 선택</label>
+                <input class="form-control" type="file" id="formFile"> -->
+
+                <input
+                  class="form-control"
+                  type="file"
+                  ref="image"
+                  @change="upload"
+                />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!----->
+    <!-- <label for="exampleInputEmail1" class="form-label">날짜</label>
     <input class="form-control" type="date" v-model="date" />
     <label for="exampleInputEmail1" class="form-label">루틴</label>
     <input class="form-control" v-model="content" />
     <button @click="submitPatch">수정완료</button>
     <br />
     테스트 <br />
-    {{ date }}, {{ content }}, {{ this.$store.state.routineStore.id }}
+    {{ date }}, {{ content }}, {{ this.$store.state.routineStore.id }} -->
   </div>
 </template>
 <script>

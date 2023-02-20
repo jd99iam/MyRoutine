@@ -1,16 +1,64 @@
 <template>
   <div>
-    <label for="exampleInputEmail1" class="form-label">날짜</label>
-    <input class="form-control" v-model="date" />
-    <label for="exampleInputEmail1" class="form-label">루틴</label>
-    <input class="form-control" v-model="content" />
-    <label for="exampleInputEmail1" class="form-label">이미지</label>
-    <input type="file" ref="image" @change="upload" />
-    <img :src="imageUploaded" alt="올린 이미지" /> <br />
-    <button @click="submitPost">생성 완료</button>
-    <br />
-    테스트 <br />
-    {{ date }}, {{ content }}, {{ this.$store.state.routineStore.id }}
+    <div class="row">
+      <div class="col">
+        <table class="table table-primary">
+          <thead>
+            <tr>
+              <th>날짜</th>
+              <td><input type="date" v-model="date" /><br /></td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th>루틴</th>
+
+              <td>
+                <textarea
+                  class="form-control"
+                  id="exampleFormControlTextarea1"
+                  rows="10"
+                  v-model="content"
+                ></textarea>
+                <br />
+                <button
+                  class="btn btn-primary"
+                  @click="submitPost"
+                  style="margin-left: 480px"
+                >
+                  생성 완료
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col">
+        <table class="table table-primary">
+          <tbody>
+            <tr style="height: 320px">
+              <td class="text-center">
+                <img :src="imageUploaded" style="height: 300px" />
+                <br />
+              </td>
+            </tr>
+            <tr style="height: 20px">
+              <td>
+                <!-- <label for="formFile" class="form-label">루틴 이미지 선택</label>
+                <input class="form-control" type="file" id="formFile"> -->
+
+                <input
+                  class="form-control"
+                  type="file"
+                  ref="image"
+                  @change="upload"
+                />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 </template>
 <script>

@@ -1,6 +1,5 @@
 <template>
   <div>
-
     <div class="row" style="margin-top: 50px">
       <div class="col-4">
         <div
@@ -88,55 +87,15 @@
             </tr>
             <tr v-for="(routine, i) in routines" :key="i">
               <td v-if="checkDateDistance(selectedDate, routine.date)">
-                <div id="carouselExample" class="carousel slide">
-                  <div class="carousel-inner">
-                    <div class="carousel-item active">
-                      <img
-                        src="@/assets/malwang.png"
-                        class="d-block w-100"
-                        alt="..."
-                      />
-                    </div>
-                    <div class="carousel-item">
-                      <img
-                        src="@/assets/malwang.png"
-                        class="d-block w-100"
-                        alt="..."
-                      />
-                    </div>
-                    <div class="carousel-item">
-                      <img
-                        src="@/assets/malwang.png"
-                        class="d-block w-100"
-                        alt="..."
-                      />
-                    </div>
-                  </div>
-                  <button
-                    class="carousel-control-prev"
-                    type="button"
-                    data-bs-target="#carouselExample"
-                    data-bs-slide="prev"
-                  >
-                    <span
-                      class="carousel-control-prev-icon"
-                      aria-hidden="true"
-                    ></span>
-                    <span class="visually-hidden">Previous</span>
-                  </button>
-                  <button
-                    class="carousel-control-next"
-                    type="button"
-                    data-bs-target="#carouselExample"
-                    data-bs-slide="next"
-                  >
-                    <span
-                      class="carousel-control-next-icon"
-                      aria-hidden="true"
-                    ></span>
-                    <span class="visually-hidden">Next</span>
-                  </button>
-                </div>
+                <span class="text-center">
+                  <img
+                    v-if="routine.image != null"
+                    alt="루틴 이미지"
+                    :src="routine.image"
+                    style="width: 630px; height: 500px"
+                  />
+                </span>
+
                 <hr />
                 <div class="row text-end" style="margin-right: 10px">
                   <span style="font-size: 20px">
@@ -144,12 +103,7 @@
                   >
                 </div>
                 <br />
-                {{ routine.routine }}<br />
-                <!-- 이미지 : {{ routine.image }}
-                <span v-if="routine.image === null">이미지가 null입니다</span>
-                <br />
-                <img alt="루틴 이미지" :src="routine.image" /> -->
-                <br /><br />
+                {{ routine.routine }}<br /><br />
 
                 <span>
                   <!-- <router-link
@@ -159,7 +113,7 @@
                     >수정</router-link
                   > -->
                   <button
-                    style="margin-left: 430px"
+                    style="margin-left: 500px"
                     class="btn btn-primary"
                     @click="routineStore"
                     :routineId="routine.id"
@@ -288,7 +242,28 @@ export default {
           .get('http://localhost:8081/routine/' + userPK, config)
           .then((res) => {
             vm.routines = res.data
-            vm.routines.image = URL.createObjectURL(vm.routines.image)
+            const config2 = {
+              headers: {
+                Authorization: 'Bearer ' + this.$store.state.loginStore.token,
+                ContentType: 'application/json'
+              },
+              responseType: 'blob'
+            }
+            vm.routines.forEach((routine) =>
+              axios
+                .get(
+                  'http://localhost:8081/routine/image/' + routine.id,
+                  config2
+                )
+                .then((res) => {
+                  if (res.data != null) {
+                    routine.image = URL.createObjectURL(res.data)
+                    // routine.image = res.data
+                  } else {
+                    routine.image = null
+                  }
+                })
+            )
           })
       }
     },

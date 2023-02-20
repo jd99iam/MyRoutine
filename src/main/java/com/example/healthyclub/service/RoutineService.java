@@ -10,7 +10,10 @@ import com.example.healthyclub.util.FileUploadUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
@@ -30,6 +33,18 @@ public class RoutineService {
 
     @Value("${upload.path.routine}")
     private String uploadRootPath;
+
+    //루틴 이미지 반환하기 위한 서비스 메소드
+    public String getRoutineImage(Long routineId){
+
+        //DB에서 id에 해당하는 루틴을 찾아서 루틴의 이미지 컬럼값을 반환함
+        RoutineEntity target = routineRepository.findById(routineId)
+                .orElseThrow(()->new IllegalArgumentException("RoutineService : 루틴을 찾을 수 없습니다"));
+
+        String routineImage = target.getImage();
+
+        return routineImage;
+    }
 
     //Create
     @Transactional
@@ -75,11 +90,11 @@ public class RoutineService {
 
                 // 이미지 처리 해주고 나서 엔티티에 setImage로 저장
                 target.setImage(savePath + File.separator + uploadFileName);
-                }
-
-            } catch(IOException e){
-                System.out.println(e);
             }
+
+        } catch(IOException e){
+            System.out.println(e);
+        }
 
         //루틴 엔티티 DB에 저장
         RoutineEntity created = routineRepository.save(target);
@@ -110,12 +125,21 @@ public class RoutineService {
         return RoutineDTO.toDTO(created);
     }
 
+//    //유저 아이디를 받아서 해당 유저의 루틴들을 List<RoutineDTO> 형태로 반환 ---- 이미지 responseDTO
+//    public List<RoutineResponseDTO> showAll(Long userId) {
+//
+//        return routineRepository.findByUserId(userId)
+//                .stream()
+//                .map(routine-> RoutineResponseDTO.toDTO(routine))
+//                .collect(Collectors.toList());
+//    }
+
     //유저 아이디를 받아서 해당 유저의 루틴들을 List<RoutineDTO> 형태로 반환
-    public List<RoutineResponseDTO> showAll(Long userId) {
+    public List<RoutineDTO> showAll(Long userId) {
 
         return routineRepository.findByUserId(userId)
                 .stream()
-                .map(routine-> RoutineResponseDTO.toDTO(routine))
+                .map(routine-> RoutineDTO.toDTO(routine))
                 .collect(Collectors.toList());
     }
 
@@ -155,7 +179,7 @@ public class RoutineService {
 
         //루틴 수정
         target.patch(routineDTO);
-        
+
         //DB에 적용하고 리턴
         return RoutineDTO.toDTO(routineRepository.save(target));
     }
@@ -176,10 +200,10 @@ public class RoutineService {
         if (target.getUser().getId()!=userId){
             throw new IllegalArgumentException("RoutineService-delete : 잘못된 접근 : 로그인한 사용자의 루틴이 아닙니다");
         }
-        
+
         //루틴 삭제
         routineRepository.delete(target);
-        
+
         return RoutineDTO.toDTO(target);
     }
 
@@ -199,13 +223,6 @@ public class RoutineService {
                 targetUser);
 
         return RoutineDTO.toDTO(routineRepository.save(copied));
-    }
 
-    @Transactional
-    public List<String> getProfileImg(Long id){
-        log.info("id 값 - {}",id);
-        List<String> imagelist = routineRepository.findimageByUserId(id);
-        return imagelist;
     }
 }
-

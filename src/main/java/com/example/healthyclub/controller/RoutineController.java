@@ -21,7 +21,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -31,6 +30,7 @@ import java.util.List;
 public class RoutineController {
 
     private final RoutineService routineService;
+
     @Value("${upload.path.routine}")
     private String uploadRootPath;
 
@@ -79,12 +79,22 @@ public class RoutineController {
 //        return ResponseEntity.status(HttpStatus.OK).body(created);
 //    }
 
+//    //루틴 읽어오기 (유저의 모든 루틴을 읽어옴) : 이미지 포함 - 루틴 읽어오기는 꼭 내 루틴만 읽어오는 것이 아님. 따라서 로그인만 하면 가능
+//    @GetMapping("/routine/{userId}")
+//    public ResponseEntity<List<RoutineResponseDTO>> readAll(@PathVariable Long userId){
+//
+//        //서비스를 이용해 리스트 받아옴
+//        List<RoutineResponseDTO> routineDTOS = routineService.showAll(userId);
+//
+//        return ResponseEntity.status(HttpStatus.OK).body(routineDTOS);
+//    }
+
     //루틴 읽어오기 (유저의 모든 루틴을 읽어옴) - 루틴 읽어오기는 꼭 내 루틴만 읽어오는 것이 아님. 따라서 로그인만 하면 가능
     @GetMapping("/routine/{userId}")
-    public ResponseEntity<List<RoutineResponseDTO>> readAll(@PathVariable Long userId){
+    public ResponseEntity<List<RoutineDTO>> readAll(@PathVariable Long userId){
 
         //서비스를 이용해 리스트 받아옴
-        List<RoutineResponseDTO> routineDTOS = routineService.showAll(userId);
+        List<RoutineDTO> routineDTOS = routineService.showAll(userId);
 
         return ResponseEntity.status(HttpStatus.OK).body(routineDTOS);
     }
@@ -129,55 +139,52 @@ public class RoutineController {
 
         //서비스에게 위임해서 복사 : PK가 targetId인 유저의 PK가 routineId인 루틴을 PK가 tokenId인 유저의 루틴으로 생성
         RoutineDTO copied = routineService.copy(routineId,Long.parseLong(tokenId));
+
         return ResponseEntity.status(HttpStatus.OK).body(copied);
     }
 
-    @GetMapping("/routine/load-profile")
-    public ResponseEntity<?> loadProfile(@AuthenticationPrincipal String id) throws IOException {
-        log.info("/auth/load-profile GET - {}",id);
-        long longId = Long.parseLong(id);
-        ///해당 유저의 닉네임을 통해서 프로필 사진의 경로를 DB에서 조회
-        //ex) /2023/01/07/ㄺㅎㄹ.파일명.확장자
-//        String profilePath = routineService.getProfileImg(longId);
-        List<String> profilePath = routineService.getProfileImg(longId);
-        //ex) C:/profile_upload/2023/...
-//        String fullPath = uploadRootPath + File.separator + profilePath;
-        List<String> fullPath = new ArrayList<>();
-        for(String x : profilePath){
-            fullPath.add(uploadRootPath + File.separator + x);
+    //루틴 이미지 표시하기 위함
+    @GetMapping("/routine/image/{routineId}")
+    public ResponseEntity<?> loadImage(@PathVariable Long routineId, @AuthenticationPrincipal String tokenId) throws IOException{
+
+        byte[] rawImageData;
+
+        String image = routineService.getRoutineImage(routineId);
+
+        if (image != null){
+            log.info("루틴아이디 : "+routineId);
+            //ex) C:/profile_upload/2023/...
+            String fullPath = uploadRootPath + File.separator + image;
+            log.info("fullPath : "+fullPath);
+
+
+            //해당 경로를 파일 객체로 포장
+            File targetFile = new File(fullPath);
+
+
+
+            //혹시 해당 파일이 존재하지 않으면 예외가 발생(FileNotFoundException)
+            if(!targetFile.exists()) {
+                log.info("id : "+routineId+"인 루틴은 이미지 targetFile이 존재하지 않음");
+                return ResponseEntity.status(HttpStatus.OK).body(null);
+            }
+            else {
+                log.info("targetfile : {}",targetFile);
+                //파일 데이터를 바이트배열로 포장 (blob 데이터)
+                rawImageData = FileCopyUtils.copyToByteArray(targetFile);
+
+                //응답 헤더 정보 추가
+                HttpHeaders headers = new HttpHeaders();
+                headers.setContentType(FileUploadUtil.getMediaType(image));
+
+                log.info("rawImageData : {}",rawImageData);
+
+                return ResponseEntity.ok().headers(headers).body(rawImageData);
+            }
+
+        } else {
+            return ResponseEntity.status(HttpStatus.OK).body(null);
         }
-
-        //해당 경로를 파일 객체로 포장
-//        File targetFile = new File(fullPath);
-        List<File> targetFile = new ArrayList<>();
-        for(String x : fullPath){
-            targetFile.add(new File(x));
-        }
-
-        log.info("targetFile - {}",targetFile);
-        //혹시 해당 파일이 존재하지 않으면 예외가 발생(FileNotFoundException)
-        if(targetFile.size() == 0) return ResponseEntity.notFound().build();
-
-        //파일 데이터를 바이트배열로 포장 (blob 데이터)
-//        byte[] rawImageData = FileCopyUtils.copyToByteArray(targetFile);
-        byte[][] rawImageData = new byte[targetFile.size()][];
-
-        for(int i = 0;i< targetFile.size();i++){
-            rawImageData[i] = FileCopyUtils.copyToByteArray(targetFile.get(i));
-
-        }
-        log.info("routinerawImageData0 - {}",rawImageData[0]);
-        log.info("routinerawImageData1 - {}",rawImageData[1]);
-        //응답 헤더 정보 추가
-        HttpHeaders headers = new HttpHeaders();
-        List<String> filetype = new ArrayList<>();
-        for(String x : profilePath){
-            headers.setContentType(FileUploadUtil.getMediaType(x));
-        }
-        //headers.setContentType(FileUploadUtil.getMediaType(profilePath));
-
-        return ResponseEntity.ok().body(rawImageData);
     }
-
 
 }
