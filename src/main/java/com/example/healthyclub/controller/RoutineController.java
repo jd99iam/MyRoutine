@@ -183,6 +183,7 @@ public class RoutineController {
             }
 
         } else {
+            log.info("이 루틴은 이미지가 없음");
             return ResponseEntity.status(HttpStatus.OK).body(null);
         }
     }

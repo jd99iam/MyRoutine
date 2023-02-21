@@ -90,7 +90,7 @@
                 <span class="text-center">
                   <img
                     v-if="routine.image != null"
-                    alt="루틴 이미지"
+                    alt="루틴 이미지가 없습니다"
                     :src="routine.image"
                     style="width: 630px; height: 500px"
                   />

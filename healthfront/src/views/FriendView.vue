@@ -1,65 +1,79 @@
 <template>
   <div>
-<br/>
-    <label style="font-size:20px;"><strong>나의 친구 수 = {{ this.value }}</strong></label>
-    <br/>
-    <label style="font-size:20px;"><strong>나를 팔로우한 수 = {{ this.follow }}</strong></label>
+    <div class="row">
+      <div class="col">
+        <table class="table table-primary text-center">
+          <thead>
+            <tr>
+              <th scope="col">이름</th>
+              <th scope="col">나이</th>
 
-<br/>
-<br/>
-<table class="table">
-  <thead>
-    <tr>
-      <th scope="col"></th>
-      <th scope="col">이름</th>
-      <th scope="col">나이</th>
-      <th scope="col">식별번호</th>
-      <th scope="col">루틴 복사하기</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr v-for="list in lists" v-bind:key="list">
+              <th scope="col">루틴 복사하기</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="list in lists" v-bind:key="list">
+              <td>{{ list.name }}</td>
+              <td>{{ list.age }}</td>
 
-      <th scope="row"></th>
-      <td>{{ list.name }}</td>
-      <td>{{ list.age }}</td>
-      <td>{{ list.id }}</td>
-      <td>
-        <button type="button" class="btn btn-secondary" @click="[showRoutine(list.id,list.name), setvalue(list.id)]">루틴 상세보기</button>
-      </td>
-    </tr>
-  </tbody>
-</table>
+              <td>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  @click=";[showRoutine(list.id, list.name), setvalue(list.id)]"
+                >
+                  루틴 상세보기
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col">
+        <table class="table table-primary" v-if="tablevalue === 1">
+          <tbody>
+            <tr v-for="d in detailList" :key="d">
+              <td>
+                <div class="card" style="width: 40rem">
+                  <div class="card-body">
+                    <h5 class="card-title">{{ d.date }}</h5>
+                    <p class="card-text">
+                      {{ d.routine }}
+                    </p>
+                    <a
+                      href="#"
+                      class="btn btn-primary"
+                      @click="routineCopy"
+                      :routineId="d.id"
+                      style="margin-left: 500px"
+                      >루틴 복사</a
+                    >
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <button
+                  type="button"
+                  class="btn btn-dark"
+                  @click="closetable"
+                  style="margin-left: 550px"
+                >
+                  접기
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
 
-    <table class ="table" v-if="tablevalue === 1">
-  <thead>
-    <tr>
-      <th>{{ who }}의 루틴 목록</th>
-      <th scope="col">식별번호</th>
-      <th scope="col">날짜</th>
-      <th scope="col">루틴</th>
-    </tr>
-  </thead>
-    <tbody>
-      <tr v-for="d in detailList" :key="d">
-        <td>{{ d.id }}</td>
-        <td>{{ d.date }}</td>
-        <td>{{ d.routine }}</td>
-        <td>
-          <button
-            @click="routineCopy"
-            type="button"
-            class="btn btn-primary"
-            :routineId="d.id"
-          >
-            루틴 복사
-          </button>
-        </td>
-      </tr>
-    </tbody>
-</table>
-<button type="button" class="btn btn-dark" @click="closetable">루틴 상세 보기 접기</button>
-</div>
+    <br />
+
+    <br />
+    <br />
+  </div>
 </template>
 <script>
 // import { thisTypeAnnotation } from '@babel/types'
