@@ -1,6 +1,9 @@
 <template>
   <div>
-    <table class="table table-primary" style="box-shadow: 1px 1px 1px black">
+    <table
+      class="table table-primary text-center"
+      style="box-shadow: 1px 1px 1px black"
+    >
       <thead>
         <tr>
           <td colspan="6">

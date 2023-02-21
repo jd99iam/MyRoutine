@@ -2,6 +2,20 @@
   <div>
     <div class="row">
       <div class="col">
+        <table class="table table-warning text-center">
+          <thead>
+            <tr>
+              <th>팔로워</th>
+              <th>
+                {{ this.follow }}
+              </th>
+              <th>팔로잉</th>
+              <th>
+                {{ this.value }}
+              </th>
+            </tr>
+          </thead>
+        </table>
         <table class="table table-primary text-center">
           <thead>
             <tr>
