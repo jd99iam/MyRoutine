@@ -43,8 +43,8 @@ public class UserService {
             log.info("userEntity update is error!");
             throw new RuntimeException("UserEntity(Service) update Error");
         }
-        String rawPw = userEntity.getPassword();
-        userEntity.setPassword(encoder.encode(rawPw));
+//        String rawPw = userEntity.getPassword();
+//        userEntity.setPassword(encoder.encode(rawPw));
         return repository.save(userEntity);
     }
 

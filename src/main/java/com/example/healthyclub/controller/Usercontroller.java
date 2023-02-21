@@ -105,7 +105,7 @@ public class Usercontroller {
     }
 
     //Userequestdto를 입력하면 정보를 바꿔주기
-    @PutMapping("/update/{id}")
+    @PatchMapping("/update/{id}")
     public ResponseEntity<?> update(@PathVariable Long id,@RequestBody UserRequestDTO dto,@AuthenticationPrincipal String Id){
 
         if(Id.equals("anonymousUser")){
@@ -120,23 +120,37 @@ public class Usercontroller {
         }
 
 
+
         try {
             log.info("/auth/update- {}",dto);
+            UserEntity user = service.show(id);
+            log.info("dto pw -{}",dto.getPassword());
+            if(encoder.matches(dto.getPassword(),user.getPassword())){
+                user.setWeight(dto.getWeight());
+                user.setHeight(dto.getHeight());
+                user.setUpdateDate(LocalDate.now());
+                service.update(user);
+                return ResponseEntity.ok().body(user);
+            }
+            else{
+                return ResponseEntity.badRequest().body(new ErrorDTO("비번 다름"));
+            }
+
             //입력받은 userRequestDTO를 userEntity 타입으로 변환해준다
-            UserEntity userEntity = new UserEntity(dto);
-
-            //joinDate 집어넣기
-            LocalDate joinDate = service.show(id).getJoinDate();
-
-            //updatedate 갱신
-            LocalDate date = LocalDate.now();
-
-            userEntity.setJoinDate(joinDate);
-            userEntity.setUpdateDate(date);
-            userEntity.setId(id);
-            UserEntity user = service.update(userEntity);
-            log.info("@AuthenticationPrincipal String userId : {}",userId);
-            return ResponseEntity.ok().body(user);
+//            UserEntity userEntity = new UserEntity(dto);
+//
+//            //joinDate 집어넣기
+//            LocalDate joinDate = service.show(id).getJoinDate();
+//
+//            //updatedate 갱신
+//            LocalDate date = LocalDate.now();
+//
+//            userEntity.setJoinDate(joinDate);
+//            userEntity.setUpdateDate(date);
+//            userEntity.setId(id);
+//            UserEntity user = service.update(userEntity);
+//            log.info("@AuthenticationPrincipal String userId : {}",userId);
+//            return ResponseEntity.ok().body(user);
 
         }catch(RuntimeException e){
             String message = "회원 update 실패";

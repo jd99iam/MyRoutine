@@ -19,25 +19,13 @@
           <table>
             <br />
             <tr>
-              <th>비밀번호</th>
+              <th>기존 비밀번호</th>
               <td>
                 <input
                   type="password"
                   class="form-control"
                   name="password"
-                  v-model="userPassword"
-                  style="margin-left: 40px"
-                />
-              </td>
-            </tr>
-            <tr>
-              <th>비밀번호확인</th>
-              <td>
-                <input
-                  type="text"
-                  class="form-control"
-                  name="passwordok"
-                  v-model="userPasswordok"
+                  v-model="dto.password"
                   style="margin-left: 40px"
                 />
               </td>
@@ -49,7 +37,7 @@
                   type="text"
                   class="form-control"
                   name="weight"
-                  v-model="weight"
+                  v-model="dto.weight"
                   style="margin-left: 40px"
                 />
               </td>
@@ -61,7 +49,7 @@
                   type="text"
                   class="form-control"
                   name="height"
-                  v-model="height"
+                  v-model="dto.height"
                   style="margin-left: 40px"
                 />
               </td>
@@ -71,7 +59,7 @@
           <button
             style="position: relative; left: 130px; border: 2px solid black"
             class="btn btn-primary" @click.prevent="changeData">
-            회원탈퇴하기
+            수정하기
           </button>
           <br />
         </form>
@@ -87,9 +75,11 @@ export default {
   components: {},
   data() {
     return {
-      password: null,
-      weight: null,
-      height: null
+      dto: {
+        password: null,
+        weight: null,
+        height: null
+      }
     }
   },
   setup() {},
@@ -98,19 +88,25 @@ export default {
   unmounted() {},
   methods: {
     changeData() {
+      const dto = this.dto
       const userPK = this.$store.state.loginStore.id
-      const weight = this.weight
-      const height = this.height
       const config = {
         headers: {
           Authorization: 'Bearer ' + this.$store.state.loginStore.token
         }
       }
-      axios
-        .put(`http://localhost:8081/auth/update/${userPK}`, { weight: weight, height: height }, config)
-        .then((res) => {
-          console.log(res)
-        })
+      try {
+        axios
+          .patch(`http://localhost:8081/auth/update/${userPK}`, dto, config)
+          .then((res) => {
+            if (res.status === 200) {
+              alert('회원 정보가 변경되었습니다.')
+              location.href = '/'
+            }
+          })
+      } catch {
+        alert('다름')
+      }
     }
   }
 }
