@@ -19,6 +19,11 @@ public class UserService {
     private final UserRepository repository;
     private final PasswordEncoder encoder;
 
+    public List<UserEntity> showAll(){
+        return repository.findAll();
+    }
+
+
     //회원가입하기
     @Transactional
     public UserEntity create(UserEntity userEntity){

@@ -51,6 +51,14 @@ public class Usercontroller {
     @Value("${upload.path}")
     private String uploadRootPath;
 
+
+    @GetMapping("/all")
+    public ResponseEntity<?> getAll(){
+        List<UserEntity> list = service.showAll();
+        return ResponseEntity.ok().body(list);
+    }
+
+
     //회원가입하기
     @PostMapping("/join")
     public ResponseEntity<?> join(@RequestPart UserRequestDTO dto,

@@ -1,229 +1,231 @@
 <template>
   <div>
     <div class="row">
-      <div class="col-4"></div>
-      <div
-        class="col-4 text-center"
-        style="margin-top: 100px; border: 1px solid black; padding: 30px"
-      >
-        <span style="font-size: 40px">MyRoutine Join</span>
-        <hr />
-        <form>
-          <tr>
-            <th>프로필사진</th>
-            <input
-              @change="upload"
-              type="file"
-              id="file"
-              name="profileImg"
-              ref="surveyImage"
-              v-bind:src="profileImg"
-              class="inputfile"
-            />
-          </tr>
-          <img
-            v-if="this.profileImg !== null"
-            :src="profileImg"
-            alt="프로필 썸네일"
-          />
-          <span v-else>
-            <br />
-            <img src="../assets/basic.png" alt="프로필 썸네일" />
-            <br />
-            기본 이미지입니다
-          </span>
-
-          <br />
-          <br />
-          <tr>
-            <th>실명</th>
-            <input
-              type="text"
-              class="form-control"
-              name="name"
-              v-model="dto.name"
-              style="margin-left: 20px"
-            />
-          </tr>
-          <br />
-          <tr>
-            <th>아이디</th>
-            <input
-              type="text"
-              class="form-control"
-              name="userId"
-              v-model="dto.userId"
-              style="margin-left: 20px"
-            />
-          </tr>
-          <br />
-          <tr>
-            <th>비밀번호</th>
-            <input
-              type="password"
-              class="form-control"
-              name="password"
-              v-model="dto.password"
-              style="margin-left: 20px"
-            />
-          </tr>
-          <br />
-          <tr>
-            <th>비밀번호확인</th>
-            <input
-              type="password"
-              class="form-control"
-              name="passwordOk"
-              v-model="dto.passwordOk"
-              style="margin-left: 20px"
-            />
-          </tr>
-          <br />
-          <tr>
-            <th>닉네임</th>
-            <input
-              type="text"
-              class="form-control"
-              name="nickname"
-              v-model="dto.nickname"
-              style="margin-left: 20px"
-            />
-          </tr>
-          <br />
-          <tr>
-            <th>이메일</th>
-            <input
-              type="text"
-              class="form-control"
-              name="email"
-              v-model="dto.email"
-              style="margin-left: 20px"
-            />
-          </tr>
-          <br />
-          <tr>
-            <th>전화번호</th>
-            <input
-              type="text"
-              class="form-control"
-              name="phone"
-              v-model="dto.phone"
-              style="margin-left: 20px"
-            />
-          </tr>
-          <br />
-
-          <div class="collapse" id="collapseExample">
+      <div class="col"></div>
+      <div class="col">
+        <table
+          class="table table-primary text-center"
+          style="box-shadow: 0px 4px 4px black"
+        >
+          <thead>
             <tr>
+              <th colspan="2"><h1>Sign Up</h1></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th colspan="2">
+                <img
+                  v-if="this.profileImg !== null"
+                  :src="profileImg"
+                  alt="프로필 썸네일"
+                  style="width: 250px; height: 250px"
+                />
+                <span v-else>
+                  <br />
+                  <img
+                    src="../assets/basic.png"
+                    alt="프로필 썸네일"
+                    style="width: 250px; height: 250px"
+                  />
+                  <br />
+                  기본 이미지입니다
+                </span>
+              </th>
+            </tr>
+            <tr>
+              <th>프로필 사진</th>
+              <th>
+                <input
+                  @change="upload"
+                  type="file"
+                  id="file"
+                  name="profileImg"
+                  ref="surveyImage"
+                  v-bind:src="profileImg"
+                  class="form-control"
+                />
+              </th>
+            </tr>
+            <tr>
+              <th>실명</th>
+              <th>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="name"
+                  v-model="dto.name"
+                />
+              </th>
+            </tr>
+            <tr>
+              <th>ID</th>
+              <th>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="userId"
+                  v-model="dto.userId"
+                  @change="checkId"
+                /><br />
+                <span v-if="idCheck === true" style="color: red"
+                  >사용할 수 없는 id입니다</span
+                >
+              </th>
+            </tr>
+            <tr>
+              <th>비밀번호</th>
+              <th>
+                <input
+                  type="password"
+                  class="form-control"
+                  name="password"
+                  v-model="dto.password"
+                />
+              </th>
+            </tr>
+            <tr>
+              <th>비밀번호확인</th>
+              <th>
+                <input
+                  type="password"
+                  class="form-control"
+                  name="passwordOk"
+                  v-model="dto.passwordOk"
+                  @change="passwordCheck"
+                /><br />
+                <span v-if="pwCheck === true" style="color: red"
+                  >비밀번호가 일치하지 않습니다</span
+                >
+              </th>
+            </tr>
+            <tr>
+              <th>닉네임</th>
+              <th>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="nickname"
+                  v-model="dto.nickname"
+                  @change="checkNickName"
+                />
+                <br />
+                <span v-if="nickCheck === true" style="color: red"
+                  >사용할 수 없는 닉네임입니다</span
+                >
+              </th>
+            </tr>
+            <tr>
+              <th>이메일</th>
+              <th>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="nickname"
+                  v-model="dto.email"
+                />
+              </th>
+            </tr>
+            <tr>
+              <th>전화번호</th>
+              <th>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="nickname"
+                  v-model="dto.phone"
+                />
+              </th>
+            </tr>
+            <tr v-if="show === true">
               <th>키</th>
-              <input
-                type="text"
-                class="form-control"
-                name="height"
-                v-model="dto.height"
-                style="margin-left: 20px"
-              />
+              <th>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="nickname"
+                  v-model="dto.height"
+                />
+              </th>
             </tr>
-            <br />
-            <tr>
+            <tr v-if="show === true">
               <th>몸무게</th>
-              <input
-                type="text"
-                class="form-control"
-                name="weight"
-                v-model="dto.weight"
-                style="margin-left: 20px"
-              />
+              <th>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="nickname"
+                  v-model="dto.weight"
+                />
+              </th>
             </tr>
-            <br />
-            <div>
-              <label>성별</label>
-              <div>
-                <!-- checkbox와 type만 다름 -->
+            <tr v-if="show === true">
+              <th>성별</th>
+              <th>
                 <input type="radio" value="남자" v-model="dto.gender" />
                 <label for="html">남자</label>
-              </div>
-
-              <div>
-                <input type="radio" value="여자" v-model="dto.gender" />
+                <input
+                  style="margin-left: 50px"
+                  type="radio"
+                  value="여자"
+                  v-model="dto.gender"
+                />
                 <label for="js">여자</label>
-              </div>
-            </div>
-            <br />
-            <tr>
-              <th>나이</th>
-              <input
-                type="text"
-                class="form-control"
-                name="age"
-                v-model="dto.age"
-                style="margin-left: 20px"
-              />
+              </th>
             </tr>
-            <br />
-            <br />
-            <div>
-              <div>
-                <label> 운동타입들 </label>
-                <br />
-                <br />
-                <br />
+            <tr v-if="show === true">
+              <th>나이</th>
+              <th>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="nickname"
+                  v-model="dto.age"
+                />
+              </th>
+            </tr>
+            <tr v-if="show === true">
+              <th>운동타입</th>
+              <th>
                 <input
                   type="checkbox"
                   value="운동타입1"
                   v-model="dto.exerciseType"
                 />
                 <label for="html">운동타입1</label>
-              </div>
-              <div>
+
                 <input
                   type="checkbox"
                   value="운동타입2"
                   v-model="dto.exerciseType"
                 />
                 <label for="css">운동타입2</label>
-              </div>
-              <div>
+
                 <input
                   type="checkbox"
                   value="운동타입3"
                   v-model="dto.exerciseType"
                 />
                 <label for="js">운동타입3</label>
-              </div>
-              <div>선택한 운동타입들: {{ dto.exerciseType }}</div>
-            </div>
-          </div>
-          <br />
-          <br />
-          <br />
-
-          <button
-            style="position: relative; left: 150px"
-            class="btn btn-success"
-            @click.prevent="joinMethod"
-          >
-            회원가입하기
-          </button>
-          <br /><br />
-          <p>
-            <a
-              style="position: relative; left: 150px"
-              class="btn btn-primary"
-              data-bs-toggle="collapse"
-              href="#collapseExample"
-              role="button"
-              aria-expanded="false"
-              aria-controls="collapseExample"
-            >
-              세부사항까지 기입하기
-            </a>
-          </p>
-        </form>
+              </th>
+            </tr>
+            <tr>
+              <th style="width: 40%">
+                <button class="btn btn-primary" @click="toggle">
+                  세부사항 기입
+                </button>
+              </th>
+              <th>
+                <button class="btn btn-danger" @click="joinMethod">
+                  회원가입 완료
+                </button>
+              </th>
+            </tr>
+          </tbody>
+        </table>
       </div>
-      <div class="col-4"></div>
+      <div class="col"></div>
     </div>
-    <br />
   </div>
 </template>
 <script>
@@ -232,6 +234,11 @@ export default {
   components: {},
   data() {
     return {
+      pwCheck: false,
+      idCheck: false,
+      nickCheck: false,
+      users: [],
+      show: false,
       profileImg: null,
       dto: {
         name: null,
@@ -251,9 +258,50 @@ export default {
   },
   setup() {},
   created() {},
-  mounted() {},
+  mounted() {
+    this.getUsers()
+  },
   unmounted() {},
   methods: {
+    passwordCheck() {
+      this.pwCheck = false
+      if (this.dto.password !== this.dto.passwordOk) {
+        this.pwCheck = true
+      }
+    },
+    checkId() {
+      this.idCheck = false
+      const id = this.dto.userId
+      console.log('입력한 id : ' + id)
+      this.users.forEach((user) => {
+        console.log('비교할 id : ' + user.userId)
+        if (id === user.userId) {
+          this.idCheck = true
+        }
+      })
+    },
+    checkNickName() {
+      this.nickCheck = false
+      const nick = this.dto.nickname
+      this.users.forEach((user) => {
+        if (nick === user.nickname) {
+          this.nickCheck = true
+        }
+      })
+    },
+    getUsers() {
+      var vm = this
+      axios.get('http://localhost:8081/auth/all').then((res) => {
+        vm.users = res.data
+      })
+    },
+    toggle() {
+      if (this.show === false) {
+        this.show = true
+      } else {
+        this.show = false
+      }
+    },
     upload(e) {
       const imageFile = e.target.files
       const url = URL.createObjectURL(imageFile[0]) // [0]을 하는 이유는 데이터가 0 인덱스에 있어서 그럼, createObjectURL에 들어가는 인자는 무조건 blob 객체여야함
@@ -265,6 +313,23 @@ export default {
       this.profileImg = url
     },
     joinMethod() {
+      if (this.idCheck === true || this.nickCheck === true) {
+        alert('id 또는 닉네임을 확인해주세요')
+        return
+      } else if (this.pwCheck === true) {
+        alert('비밀번호가 일치하지 않습니다')
+        return
+      } else if (
+        this.dto.name === null ||
+        this.dto.userId === null ||
+        this.dto.password === null ||
+        this.dto.nickname === null ||
+        this.dto.email === null ||
+        this.dto.phone === null
+      ) {
+        alert('필수 입력 사항을 입력하지 않았습니다')
+        return
+      }
       const profileImgs = this.$refs.surveyImage.files[0] // 이미지 바로 가져와서 원래 blob
       const dtos = {
         // dto니까 blob 으로 바꿔줘야함 : 왜냐하면 multipart-form data에 append 해야해서
