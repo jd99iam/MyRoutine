@@ -96,7 +96,6 @@
                   />
                 </span>
 
-                <hr />
                 <div class="row text-end" style="margin-right: 10px">
                   <span style="font-size: 20px">
                     <b>{{ routine.date }}</b></span
@@ -256,12 +255,22 @@ export default {
                   config2
                 )
                 .then((res) => {
-                  if (res.data != null) {
-                    routine.image = URL.createObjectURL(res.data)
-                    // routine.image = res.data
-                  } else {
+                  if (res.status === 204) {
+                    console.log('이미지가 없는 루틴임')
                     routine.image = null
+                  } else {
+                    console.log('이미지가 있는 루틴임')
+                    routine.image = URL.createObjectURL(res.data)
                   }
+
+                  // if (res.data != null) {
+                  //   console.log('이미지가 있는 루틴임')
+                  //   routine.image = URL.createObjectURL(res.data)
+                  //   // routine.image = res.data
+                  // } else {
+                  //   console.log('이미지가 없는 루틴임')
+                  //   routine.image = null
+                  // }
                 })
             )
           })
